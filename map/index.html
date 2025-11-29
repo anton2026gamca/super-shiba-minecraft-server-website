@@ -21,7 +21,7 @@
     }
     .sidebar {
       width: 250px;
-      background: var(--bg-secondary);
+      background: #0a0a0af0;
       color: var(--text-primary);
       padding: var(--spacing-sm);
       box-sizing: border-box;
@@ -29,6 +29,7 @@
       display: flex;
       justify-content: space-between;
       flex-direction: column;
+      z-index: 1000;
     }
     .sidebar h3 {
       margin-bottom: var(--spacing-sm);
@@ -53,7 +54,7 @@
       z-index: 9999;
     }
     .world-header {
-      color: var(--text-muted);
+      color: var(--text-primary);
       font-size: 11px;
       text-transform: uppercase;
       margin-top: 15px;
@@ -134,8 +135,13 @@
       color: var(--text-muted);
     }
     .iframe-container {
-      flex: 1;
-      position: relative;
+      /* flex: 1;
+      position: relative; */
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
     }
     iframe {
       border: none;
