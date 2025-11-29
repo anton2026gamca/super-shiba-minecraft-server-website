@@ -224,55 +224,97 @@ function updatePlayers() {
 
 function displayPlayers(players) {
   playerCountElement.textContent = `${players.length} player${players.length !== 1 ? 's' : ''} online`;
-  playersListContainer.innerHTML = '';
   
-  if (players.length === 0) {
-    return;
-  }
+  const currentPlayerNames = new Set(players.map(p => p.name || p.account));
+  
+  const existingPlayerItems = playersListContainer.querySelectorAll('.player-item');
+  existingPlayerItems.forEach(item => {
+    const playerName = item.dataset.playerName;
+    if (!currentPlayerNames.has(playerName)) {
+      item.remove();
+    }
+  });
   
   players.forEach(player => {
-    const playerItem = document.createElement('div');
-    playerItem.className = 'player-item';
-
     const playerName = player.name || player.account;
     
-    const avatarPlaceholder = document.createElement('div');
-    avatarPlaceholder.classList.add('player-avatar');
-    avatarPlaceholder.classList.add('player-avatar-placeholder');
-    avatarPlaceholder.textContent = playerName.charAt(0).toUpperCase();
+    const escapedPlayerName = playerName.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    let playerItem = playersListContainer.querySelector(`.player-item[data-player-name="${escapedPlayerName}"]`);
 
-    const avatar = document.createElement('img');
-    avatar.className = 'player-avatar';
-    avatar.src = `https://mc-heads.net/avatar/${playerName}/24`;
-    avatar.alt = playerName.charAt(0).toUpperCase();
-    avatar.onload = function() {
-      avatarPlaceholder.replaceWith(avatar);
-    };
-    
-    const nameContainer = document.createElement('div');
-    nameContainer.style.flex = '1';
-    
-    const name = document.createElement('div');
-    name.className = 'player-name';
-    name.textContent = playerName;
-    
-    const world = document.createElement('div');
-    world.className = 'player-world';
-    world.textContent = WORLDS_CONFIG.find(w => w.worldName === player.world)?.displayName || '';
-    
-    nameContainer.appendChild(name);
-    if (player.world) {
-      nameContainer.appendChild(world);
+    if (playerItem) {
+      const worldElement = playerItem.querySelector('.player-world');
+      const newWorldText = WORLDS_CONFIG.find(w => w.worldName === player.world)?.displayName || '';
+      if (worldElement && worldElement.textContent !== newWorldText) {
+        worldElement.textContent = newWorldText;
+      }
+      playerItem.dataset.playerX = player.x !== undefined ? player.x : '';
+      playerItem.dataset.playerY = player.y !== undefined ? player.y : '';
+      playerItem.dataset.playerZ = player.z !== undefined ? player.z : '';
+      playerItem.dataset.playerWorld = player.world || '';
+      playerItem.onclick = () => {
+        centerOnPlayer({
+          name: playerName,
+          x: player.x,
+          y: player.y,
+          z: player.z,
+          world: player.world,
+          account: player.account
+        });
+      };
+    } else {
+      playerItem = document.createElement('div');
+      playerItem.className = 'player-item';
+      playerItem.dataset.playerName = playerName;
+      playerItem.dataset.playerX = player.x !== undefined ? player.x : '';
+      playerItem.dataset.playerY = player.y !== undefined ? player.y : '';
+      playerItem.dataset.playerZ = player.z !== undefined ? player.z : '';
+      playerItem.dataset.playerWorld = player.world || '';
+
+      const avatarPlaceholder = document.createElement('div');
+      avatarPlaceholder.classList.add('player-avatar');
+      avatarPlaceholder.classList.add('player-avatar-placeholder');
+      avatarPlaceholder.textContent = playerName.charAt(0).toUpperCase();
+
+      const avatar = document.createElement('img');
+      avatar.className = 'player-avatar';
+      avatar.src = `https://mc-heads.net/avatar/${playerName}/24`;
+      avatar.alt = playerName.charAt(0).toUpperCase();
+      avatar.onload = function() {
+        avatarPlaceholder.replaceWith(avatar);
+      };
+      
+      const nameContainer = document.createElement('div');
+      nameContainer.style.flex = '1';
+      
+      const name = document.createElement('div');
+      name.className = 'player-name';
+      name.textContent = playerName;
+      
+      const world = document.createElement('div');
+      world.className = 'player-world';
+      world.textContent = WORLDS_CONFIG.find(w => w.worldName === player.world)?.displayName || '';
+      
+      nameContainer.appendChild(name);
+      if (player.world) {
+        nameContainer.appendChild(world);
+      }
+      
+      playerItem.appendChild(avatarPlaceholder);
+      playerItem.appendChild(nameContainer);
+      
+      playerItem.onclick = () => {
+        centerOnPlayer({
+          name: playerName,
+          x: player.x,
+          y: player.y,
+          z: player.z,
+          world: player.world,
+          account: player.account
+        });
+      };
+      
+      playersListContainer.appendChild(playerItem);
     }
-    
-    playerItem.appendChild(avatarPlaceholder);
-    playerItem.appendChild(nameContainer);
-    
-    playerItem.addEventListener('click', () => {
-      centerOnPlayer(player);
-    });
-    
-    playersListContainer.appendChild(playerItem);
   });
 }
 
