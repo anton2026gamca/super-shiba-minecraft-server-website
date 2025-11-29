@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Shiba Minecraft Server</title>
+  <link rel="stylesheet" href="theme.css">
+  <style>
+    .header {
+      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
+      padding: var(--spacing-xl) 0;
+      text-align: center;
+      border-bottom: 3px solid var(--accent-primary);
+      margin-bottom: var(--spacing-xl);
+    }
+    
+    .header h1 {
+      font-size: 3rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--text-primary);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    .header .tagline {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+    
+    .server-address {
+      background: var(--bg-tertiary);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      text-align: center;
+      border: 2px solid var(--accent-primary);
+      margin: var(--spacing-lg) 0;
+    }
+    
+    .server-address code {
+      font-size: 1.3rem;
+      background: var(--bg-primary);
+      padding: var(--spacing-sm) var(--spacing-md);
+      color: var(--accent-secondary);
+    }
+    
+    .quick-links {
+      display: flex;
+      gap: var(--spacing-md);
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: var(--spacing-xl) 0;
+    }
+    
+    .spec-badge {
+      display: inline-block;
+      background: var(--bg-tertiary);
+      padding: var(--spacing-xs) var(--spacing-md);
+      border-radius: var(--radius-sm);
+      margin: var(--spacing-xs);
+      font-size: 0.9rem;
+      border: 1px solid var(--border-color);
+    }
+    
+    .mod-item {
+      background: var(--bg-tertiary);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-md);
+      margin-bottom: var(--spacing-sm);
+      border-left: 3px solid var(--accent-primary);
+    }
+    
+    .mod-item h4 {
+      margin-bottom: var(--spacing-xs);
+      color: var(--accent-primary);
+    }
+    
+    .mod-item p {
+      margin-bottom: 0;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    
+    .status-online {
+      color: var(--accent-secondary);
+      font-weight: bold;
+    }
+    
+    .footer {
+      margin-top: var(--spacing-xl);
+      padding-top: var(--spacing-xl);
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>🐕 Super Shiba Minecraft Server</h1>
+    <p class="tagline">Hosted on Raspberry Pi CM5 | Shiba IRL Tokyo Community</p>
+  </div>
+  
+  <div class="container">
+    <!-- Server Address -->
+    <div class="server-address">
+      <h3>Server Address</h3>
+      <code>cyberintruder.ddns.net</code>
+      <p class="text-muted" style="margin-top: 10px;">Java Edition 1.20.1 (Fabric)</p>
+      <p class="text-muted" style="margin-top: 5px; font-size: 0.9rem;">⚠️ Whitelist only - Shiba IRL attendees only</p>
+    </div>
+    
+    <!-- Quick Links -->
+    <div class="quick-links">
+      <a href="map/" class="btn btn-primary">🗺️ View Live Map</a>
+      <a href="mods/" class="btn btn-secondary">📦 Mods & Downloads</a>
+      <a href="#rules" class="btn">📜 Rules</a>
+      <a href="#contact" class="btn">💬 Contact</a>
+    </div>
+    
+    <!-- About Section -->
+    <div class="card" id="about">
+      <h2>About the Server</h2>
+      <p>
+        This is a Minecraft server for everyone who attended <strong>Shiba IRL</strong> 
+        in Tokyo. The server runs on a Raspberry Pi CM5, so the whitelist is exclusive 
+        to event attendees to ensure everyone gets a smooth experience despite the hardware limitations.
+      </p>
+      <p>
+        This is a <strong>Create-focused</strong> server with Biomes O' Plenty for world generation. 
+        Build incredible contraptions, automate everything you can think of, explore beautiful biomes, 
+        and collaborate with Shiba IRL attendees!
+      </p>
+    </div>
+    
+    <!-- Server Specs -->
+    <div class="card">
+      <h2>Server Specifications</h2>
+      <p>The server runs on:</p>
+      <div>
+        <span class="spec-badge">🔧 Raspberry Pi CM5</span>
+        <span class="spec-badge">💾 8GB RAM</span>
+        <span class="spec-badge">💿 64GB eMMC Storage</span>
+        <span class="spec-badge">🐧 Linux</span>
+        <span class="spec-badge">☕ Minecraft 1.20.1</span>
+        <span class="spec-badge">🧵 Fabric</span>
+      </div>
+    </div>
+    
+    <!-- Features and Rules -->
+    <div class="grid grid-2">
+      <div class="card">
+        <h3>🎮 Server Features</h3>
+        <ul>
+          <li>Create-focused modded survival experience</li>
+          <li>Biomes O' Plenty world generation</li>
+          <li>Live Dynmap with player tracking</li>
+          <li>Simple Voice Chat for in-game communication</li>
+          <li>Community from Shiba IRL</li>
+          <li>Exclusive whitelist - Shiba IRL attendees only</li>
+          <li>Regular backups</li>
+        </ul>
+      </div>
+      
+      <div class="card" id="rules">
+        <h3>📜 Server Rules</h3>
+        <ul>
+          <li>Be respectful, no griefing, stealing, or messing with other players' builds</li>
+          <li>No PVP or traps - this is a peaceful server</li>
+          <li>Use Create machines responsibly and avoid causing lag</li>
+          <li>Don't modify someone else's area without permission</li>
+          <li>Keep the world clean - remove leftover holes, quarries, and machines</li>
+          <li>The spawn is for shops (items & services) and public builds - build your base at least 300 blocks away</li>
+          <li><strong>Have fun</strong>, build cool stuff, and contribute positively to the server!</li>
+        </ul>
+      </div>
+    </div>
+    
+    <!-- Mods Section -->
+    <div class="card" id="mods">
+      <h2>📦 Server Mods</h2>
+      <p>This is a Fabric 1.20.1 modded server with Create as the main focus and Biomes O' Plenty for world generation.</p>
+      <p>
+        <a href="mods/" class="btn btn-primary">View Full Mod List & Downloads →</a>
+      </p>
+    </div>
+    
+    <!-- Contact Section -->
+    <div class="card" id="contact">
+      <h2>💬 Contact Me</h2>
+      <p>
+        Want to join the server? If you attended Shiba IRL in Tokyo, reach out to me on Slack!
+      </p>
+      <div style="margin-top: 20px; padding: 20px; background: var(--bg-tertiary); border-radius: var(--radius-md); text-align: center;">
+        <p style="margin-bottom: 15px; margin-top: 0;">Message me on the Hack Club Slack:</p>
+        <a href="https://hackclub.slack.com/team/U086TRXKG5D" target="_blank" class="btn btn-primary" style="display: inline-block;">
+          💬 Open Hack Club Slack
+        </a>
+      </div>
+      <p class="text-muted">
+        <strong>Note:</strong> Please only reach out if you actually attended Shiba IRL.
+      </p>
+    </div>
+    
+    <!-- Community -->
+    <div class="card">
+      <h2>👥 Community</h2>
+      <p>
+        This server is for everyone who attended Shiba IRL Tokyo. The Raspberry Pi CM5 hardware 
+        limits the number of players that can be supported, so access is restricted exclusively 
+        to event attendees to keep performance smooth for everyone.
+      </p>
+      <p class="text-muted">
+        <strong>Built with ❤️ for the Hack Club Shiba IRL community</strong>
+      </p>
+    </div>
+    
+    <div class="footer">
+      <p>Super Shiba Minecraft Server © 2025 | Powered by Raspberry Pi CM5</p>
+    </div>
+  </div>
+</body>
+</html>
