@@ -7,27 +7,6 @@
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .header {
-      background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%);
-      padding: var(--spacing-xl) 0;
-      text-align: center;
-      border-bottom: 3px solid var(--accent-primary);
-      margin-bottom: var(--spacing-xl);
-    }
-    
-    .header h1 {
-      font-size: 3rem;
-      margin-bottom: var(--spacing-sm);
-      color: var(--text-primary);
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    }
-    
-    .header .tagline {
-      font-size: 1.2rem;
-      color: var(--text-muted);
-      margin-bottom: 0;
-    }
-    
     .server-address {
       background: var(--bg-tertiary);
       padding: var(--spacing-md);
@@ -52,56 +31,30 @@
       margin: var(--spacing-xl) 0;
     }
     
-    .spec-badge {
+    .spec-badge-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-md);
+      justify-content: center;
+    }
+
+    .spec-badge-container span {
       display: inline-block;
       background: var(--bg-tertiary);
       padding: var(--spacing-xs) var(--spacing-md);
       border-radius: var(--radius-sm);
-      margin: var(--spacing-xs);
       font-size: 0.9rem;
       border: 1px solid var(--border-color);
-    }
-    
-    .mod-item {
-      background: var(--bg-tertiary);
-      padding: var(--spacing-md);
-      border-radius: var(--radius-md);
-      margin-bottom: var(--spacing-sm);
-      border-left: 3px solid var(--accent-primary);
-    }
-    
-    .mod-item h4 {
-      margin-bottom: var(--spacing-xs);
-      color: var(--accent-primary);
-    }
-    
-    .mod-item p {
-      margin-bottom: 0;
-      font-size: 0.95rem;
-      color: var(--text-muted);
-    }
-    
-    .status-online {
-      color: var(--accent-secondary);
-      font-weight: bold;
-    }
-    
-    .footer {
-      margin-top: var(--spacing-xl);
-      padding-top: var(--spacing-xl);
-      border-top: 1px solid var(--border-color);
-      text-align: center;
-      color: var(--text-muted);
-      font-size: 0.9rem;
     }
   </style>
 </head>
 <body>
-  <div class="header">
+  <header class="header">
     <h1><i class="fa-solid fa-dog" aria-hidden="true"></i> Super Shiba Minecraft Server</h1>
     <p class="tagline">Hosted on Raspberry Pi CM5 | Shiba IRL Tokyo Community</p>
-  </div>
-  
+  </header>
+
   <div class="container">
     <!-- Server Address -->
     <div class="server-address">
@@ -138,13 +91,13 @@
     <div class="card">
       <h2>Server Specifications</h2>
       <p>The server runs on:</p>
-      <div>
-  <span class="spec-badge"><i class="fa-solid fa-wrench" aria-hidden="true"></i> Raspberry Pi CM5</span>
-  <span class="spec-badge"><i class="fa-solid fa-hdd" aria-hidden="true"></i> 8GB RAM</span>
-  <span class="spec-badge"><i class="fa-solid fa-compact-disc" aria-hidden="true"></i> 64GB eMMC Storage</span>
-  <span class="spec-badge"><i class="fa-brands fa-linux" aria-hidden="true"></i> Linux</span>
-  <span class="spec-badge"><i class="fa-solid fa-coffee" aria-hidden="true"></i> Minecraft 1.20.1</span>
-  <span class="spec-badge"><i class="fa-solid fa-cubes" aria-hidden="true"></i> Fabric</span>
+      <div class="spec-badge-container">
+        <span><i class="fa-solid fa-wrench" aria-hidden="true"></i> Raspberry Pi CM5</span>
+        <span><i class="fa-solid fa-hdd" aria-hidden="true"></i> 8GB RAM</span>
+        <span><i class="fa-solid fa-compact-disc" aria-hidden="true"></i> 64GB eMMC Storage</span>
+        <span><i class="fa-brands fa-linux" aria-hidden="true"></i> Linux</span>
+        <span><i class="fa-solid fa-coffee" aria-hidden="true"></i> Minecraft 1.20.1</span>
+        <span><i class="fa-solid fa-cubes" aria-hidden="true"></i> Fabric</span>
       </div>
     </div>
     
@@ -216,7 +169,7 @@
       </p>
     </div>
     
-    <div class="footer">
+    <footer>
       <p>Super Shiba Minecraft Server © 2025 | Powered by Raspberry Pi CM5</p>
       <p class="site-contrib">
         <a href="https://github.com/anton2026gamca/super-shiba-minecraft-server-website/blob/main/index.html" target="_blank" rel="noopener">
@@ -226,7 +179,7 @@
           Contribute on GitHub
         </a>
       </p>
-    </div>
+    </footer>
   </div>
 </body>
 </html>
