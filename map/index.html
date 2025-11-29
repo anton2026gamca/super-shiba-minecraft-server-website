@@ -37,7 +37,9 @@
       margin-bottom: 25px;
     }
     .map-button {
-      display: block;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       width: 100%;
       padding: 3px 7px;
       margin-bottom: 8px;
@@ -55,6 +57,18 @@
     }
     .map-button.active {
       background: var(--accent-primary);
+    }
+    .map-button:disabled {
+      cursor: default;
+      opacity: 0.6;
+      filter: grayscale(10%);
+      background: var(--bg-tertiary);
+      color: var(--text-muted);
+    }
+    .map-button .lock-icon {
+      margin-left: 8px;
+      font-size: 12px;
+      opacity: 0.9;
     }
     .player-item {
       padding: 8px 10px;
@@ -120,7 +134,10 @@
 <body>
   <div id="container">
     <div id="sidebar">
-      <a href="../" class="back-link">← Back to Home</a>
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom: var(--spacing-md);">
+        <a href="../" class="back-link">← Back to Home</a>
+        <div id="close-sidebar" class="back-link" title="Close sidebar" style="padding: var(--spacing-xs) var(--spacing-md); user-select: none; cursor: pointer;">✕</div>
+      </div>
       
       <section>
         <h3>Maps</h3>
@@ -138,6 +155,7 @@
       <iframe src="dynmap/" title="Minecraft Dynmap"></iframe>
     </div>
   </div>
+    <div id="open-sidebar" class="back-link" title="Open sidebar" style="position: fixed; left: 12px; top: 12px; display: none; z-index: 9999; user-select: none; cursor: pointer;">☰</div>
   <div style="position: fixed; left: 12px; bottom: 12px;">
     <div class="site-contrib">
       <a href="https://github.com/anton2026gamca/super-shiba-minecraft-server-website/blob/main/map/index.html" target="_blank" rel="noopener">
@@ -155,8 +173,8 @@
         displayName: 'Overworld',
         defaultZoom: 0,
         maps: [
-          { mapName: 'flat', displayName: 'Flat' },
-          { mapName: 'surface', displayName: '3D' }
+          { mapName: 'flat', displayName: 'Flat', disabled: false },
+          { mapName: 'surface', displayName: '3D', disabled: true }
         ]
       },
       {
@@ -164,8 +182,8 @@
         displayName: 'Nether',
         defaultZoom: 2,
         maps: [
-          { mapName: 'flat', displayName: 'Flat' },
-          { mapName: 'nether', displayName: '3D' }
+          { mapName: 'flat', displayName: 'Flat', disabled: true },
+          { mapName: 'nether', displayName: '3D', disabled: true }
         ]
       },
       {
@@ -173,8 +191,8 @@
         displayName: 'The End',
         defaultZoom: 2,
         maps: [
-          { mapName: 'flat', displayName: 'Flat' },
-          { mapName: 'the_end', displayName: '3D' }
+          { mapName: 'flat', displayName: 'Flat', disabled: true },
+          { mapName: 'the_end', displayName: '3D', disabled: true }
         ]
       }
     ];
@@ -264,19 +282,30 @@
           button.dataset.worldName = world.worldName;
           button.dataset.mapName = map.mapName;
           button.dataset.defaultZoom = world.defaultZoom;
-          
-          if (isFirst) {
-            button.classList.add('active');
-            currentWorldName = world.worldName;
-            currentMapName = map.mapName;
-            isFirst = false;
+          // mark disabled maps
+          if (map.disabled) {
+            button.disabled = true;
+            // append a lock icon to the right
+            const lock = document.createElement('span');
+            lock.className = 'lock-icon';
+            lock.setAttribute('aria-hidden', 'true');
+            lock.textContent = '🔒';
+            button.appendChild(lock);
+          } else {
+            // choose the first non-disabled map as the active default
+            if (isFirst) {
+              button.classList.add('active');
+              currentWorldName = world.worldName;
+              currentMapName = map.mapName;
+              isFirst = false;
+            }
+
+            button.addEventListener('click', () => {
+              switchToMap(world.worldName, map.mapName, world.defaultZoom);
+              document.querySelectorAll('.map-button').forEach(b => b.classList.remove('active'));
+              button.classList.add('active');
+            });
           }
-          
-          button.addEventListener('click', () => {
-            switchToMap(world.worldName, map.mapName, world.defaultZoom);
-            document.querySelectorAll('.map-button').forEach(b => b.classList.remove('active'));
-            button.classList.add('active');
-          });
           
           mapButtonsContainer.appendChild(button);
         });
@@ -446,6 +475,39 @@
       }
     }
     
+    (function() {
+      const closeSidebarBtn = document.getElementById('close-sidebar');
+      const openSidebarBtn = document.getElementById('open-sidebar');
+      const sidebarEl = document.getElementById('sidebar');
+      const iframeContainerEl = document.getElementById('iframe-container');
+
+      function closeSidebar() {
+        if (!sidebarEl) return;
+        sidebarEl.style.display = 'none';
+        if (openSidebarBtn) openSidebarBtn.style.display = 'inline-block';
+        if (iframeContainerEl) iframeContainerEl.style.flex = '1';
+        try { localStorage.setItem('ss_sidebar_hidden', '1'); } catch (e) {}
+      }
+
+      function openSidebar() {
+        if (!sidebarEl) return;
+        sidebarEl.style.display = '';
+        if (openSidebarBtn) openSidebarBtn.style.display = 'none';
+        try { localStorage.removeItem('ss_sidebar_hidden'); } catch (e) {}
+      }
+
+      if (closeSidebarBtn) closeSidebarBtn.addEventListener('click', closeSidebar);
+      if (openSidebarBtn) openSidebarBtn.addEventListener('click', openSidebar);
+
+      try {
+        if (localStorage.getItem('ss_sidebar_hidden')) {
+          closeSidebar();
+        }
+      } catch (e) {
+        // ignore storage errors
+      }
+    })();
+
     window.addEventListener('beforeunload', () => {
       if (updateInterval) {
         clearInterval(updateInterval);

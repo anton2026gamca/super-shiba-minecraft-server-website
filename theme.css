@@ -179,7 +179,6 @@ code {
 .mt-lg { margin-top: var(--spacing-xl); }
 .mb-lg { margin-bottom: var(--spacing-xl); }
 
-/* Small contribute area used on each page bottom */
 .site-contrib {
   margin-top: var(--spacing-md);
   font-size: 0.9rem;
