@@ -102,7 +102,7 @@ function displayMapsFromConfig() {
   
   WORLDS_CONFIG.forEach((world) => {
     const worldHeader = document.createElement('div');
-    worldHeader.style.cssText = 'color: var(--text-muted); font-size: 11px; text-transform: uppercase; margin-top: 15px; margin-bottom: 8px; font-weight: bold; letter-spacing: 0.5px;';
+    worldHeader.classList.add('world-header');
     worldHeader.textContent = world.displayName;
     mapButtonsContainer.appendChild(worldHeader);
     
@@ -233,23 +233,20 @@ function displayPlayers(players) {
   players.forEach(player => {
     const playerItem = document.createElement('div');
     playerItem.className = 'player-item';
+
+    const playerName = player.name || player.account;
     
+    const avatarPlaceholder = document.createElement('div');
+    avatarPlaceholder.classList.add('player-avatar');
+    avatarPlaceholder.classList.add('player-avatar-placeholder');
+    avatarPlaceholder.textContent = playerName.charAt(0).toUpperCase();
+
     const avatar = document.createElement('img');
     avatar.className = 'player-avatar';
-    const playerName = player.name || player.account;
     avatar.src = `https://mc-heads.net/avatar/${playerName}/24`;
-    avatar.alt = playerName;
-    avatar.onerror = function() {
-              const fallback = document.createElement('div');
-      fallback.className = 'player-avatar';
-      fallback.style.background = '#' + Math.floor(Math.abs(Math.sin(playerName.charCodeAt(0)) * 16777215)).toString(16);
-      fallback.style.display = 'flex';
-      fallback.style.alignItems = 'center';
-      fallback.style.justifyContent = 'center';
-      fallback.style.color = 'white';
-      fallback.style.fontWeight = 'bold';
-      fallback.textContent = playerName.charAt(0).toUpperCase();
-      this.replaceWith(fallback);
+    avatar.alt = playerName.charAt(0).toUpperCase();
+    avatar.onload = function() {
+      avatarPlaceholder.replaceWith(avatar);
     };
     
     const nameContainer = document.createElement('div');
@@ -261,14 +258,14 @@ function displayPlayers(players) {
     
     const world = document.createElement('div');
     world.className = 'player-world';
-    world.textContent = player.world || '';
+    world.textContent = WORLDS_CONFIG.find(w => w.worldName === player.world)?.displayName || '';
     
     nameContainer.appendChild(name);
     if (player.world) {
       nameContainer.appendChild(world);
     }
     
-    playerItem.appendChild(avatar);
+    playerItem.appendChild(avatarPlaceholder);
     playerItem.appendChild(nameContainer);
     
     playerItem.addEventListener('click', () => {
