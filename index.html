@@ -7,20 +7,22 @@
   <link rel="stylesheet" href="theme.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    .server-address {
+    .highlight-block {
       background: var(--bg-tertiary);
       padding: var(--spacing-md);
       border-radius: var(--radius-md);
       text-align: center;
       border: 2px solid var(--accent-primary);
-      margin: var(--spacing-lg) 0;
+      margin: var(--spacing-md) 0;
     }
     
-    .server-address code {
+    .highlight-block code {
       font-size: 1.3rem;
       background: var(--bg-primary);
-      padding: var(--spacing-sm) var(--spacing-md);
+      padding: 5px var(--spacing-md) 2px;
+      margin: var(--spacing-sm) 0;
       color: var(--accent-secondary);
+      display: inline-block;
     }
     
     .quick-links {
@@ -35,7 +37,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: var(--spacing-sm);
-      margin-top: var(--spacing-md);
+      margin: var(--spacing-md) 0;
       justify-content: center;
     }
 
@@ -57,11 +59,11 @@
 
   <div class="container">
     <!-- Server Address -->
-    <div class="server-address">
+    <div class="highlight-block">
       <h3>Server Address</h3>
       <code>cyberintruder.ddns.net</code>
-      <p class="text-muted" style="margin-top: 10px;">Java Edition 1.20.1 (Fabric)</p>
-  <p class="text-muted" style="margin-top: 5px; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Whitelist only - Shiba IRL attendees only</p>
+      <p class="text-muted" style="margin: 0;">Java Edition 1.20.1 (Fabric)</p>
+      <p class="text-muted" style="margin: 0; font-size: 0.9rem;"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Whitelist only - Shiba IRL attendees only</p>
     </div>
     
     <!-- Quick Links -->
@@ -76,7 +78,7 @@
     <div class="card" id="about">
       <h2>About the Server</h2>
       <p>
-        This is a Minecraft server for everyone who attended <strong>Shiba IRL</strong> 
+        This is a Minecraft server for everyone who attended <strong><a href="https://shiba.hackclub.com/" target="_blank">Shiba IRL</a></strong> 
         in Tokyo. The server runs on a Raspberry Pi CM5, so the whitelist is exclusive 
         to event attendees to ensure everyone gets a smooth experience despite the hardware limitations.
       </p>
@@ -145,15 +147,12 @@
       <p>
         Want to join the server? If you attended Shiba IRL in Tokyo, reach out to me on Slack!
       </p>
-      <div style="margin-top: 20px; padding: 20px; background: var(--bg-tertiary); border-radius: var(--radius-md); text-align: center;">
+      <div class="highlight-block">
         <p style="margin-bottom: 15px; margin-top: 0;">Message me on the Hack Club Slack:</p>
-        <a href="https://hackclub.slack.com/team/U086TRXKG5D" target="_blank" class="btn btn-primary" style="display: inline-block;">
+        <a href="https://hackclub.slack.com/team/U086TRXKG5D" target="_blank" class="btn btn-primary">
           <i class="fa-solid fa-comments" aria-hidden="true"></i> Open Hack Club Slack
         </a>
       </div>
-      <p class="text-muted">
-        <strong>Note:</strong> Please only reach out if you actually attended Shiba IRL.
-      </p>
     </div>
     
     <!-- Community -->

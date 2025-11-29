@@ -30,7 +30,7 @@ const WORLDS_CONFIG = [
 
 const iframe = document.querySelector('iframe');
 const mapButtonsContainer = document.getElementById('map-buttons');
-const loadingText = document.getElementById('loading');
+const loadingText = document.getElementById('map-loading');
 const playersListContainer = document.getElementById('players-list');
 const playerCountElement = document.getElementById('player-count');
 let currentMapIndex = 0;

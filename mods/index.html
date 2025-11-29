@@ -7,6 +7,10 @@
   <link rel="stylesheet" href="../theme.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
+    .mod-category {
+      margin-bottom: var(--spacing-md);
+    }
+
     .mod-category h2 {
       color: var(--accent-primary);
       font-size: 1.5rem;
@@ -24,6 +28,7 @@
     }
     
     .mod-item h4 {
+      margin-top: 0;
       margin-bottom: var(--spacing-xs);
       color: var(--text-primary);
       display: flex;
@@ -55,6 +60,92 @@
       font-weight: bold;
       text-transform: uppercase;
     }
+
+    .all-mods-summary {
+      cursor: pointer;
+      padding: var(--spacing-sm) var(--spacing-md);
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-sm);
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .all-mods-summary:hover {
+      background: var(--bg-hover);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      color: var(--text-primary);
+    }
+
+    .all-mods-list {
+      margin-top: var(--spacing-md);
+      padding: 0 var(--spacing-md);
+      background: var(--bg-primary);
+      border-radius: var(--radius-sm);
+      font-family: monospace;
+      font-size: 0.85rem;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .all-mods-list ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .download-buttons-container {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    .download-buttons-container a {
+      flex: 1;
+      min-width: 200px;
+      text-align: center;
+    }
+
+    .highlighted-mods-title {
+      font-size: 1.2rem;
+      margin-top: 25px;
+      margin-bottom: 15px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .stat-card {
+      background: var(--bg-tertiary);
+      padding: 15px;
+      border-radius: var(--radius-md);
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+    }
+
+    .stat-number-danger {
+      color: var(--accent-danger);
+    }
+
+    .stat-number-secondary {
+      color: var(--accent-secondary);
+    }
+
+    .stat-number-primary {
+      color: var(--accent-primary);
+    }
+
+    .stat-label {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
   </style>
 </head>
 <body>
@@ -67,25 +158,25 @@
     <a href="../" class="btn"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Home</a>
     
     <div class="card" style="border-left: 4px solid var(--accent-warning);">
-      <h3 style="margin-top: 0;"><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Important Information</h3>
+      <h3><i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> Important Information</h3>
       <p>This server runs on Fabric 1.20.1. You have two options:</p>
       
         <div style="margin: 20px 0;">
-        <h4 style="margin-bottom: 10px;"><i class="fa-solid fa-box" aria-hidden="true"></i> Option 1: Download Mod Packs (Easiest)</h4>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 15px;">
-          <a href="mods-required.zip" download class="btn btn-primary" style="flex: 1; min-width: 200px; text-align: center;">
+        <h4><i class="fa-solid fa-box" aria-hidden="true"></i> Option 1: Download Mod Packs (Easiest)</h4>
+        <div class="download-buttons-container">
+          <a href="mods-required.zip" download class="btn btn-primary">
             <i class="fa-solid fa-download" aria-hidden="true"></i> Download Required Mods Only
           </a>
-          <a href="mods-all.zip" download class="btn btn-secondary" style="flex: 1; min-width: 200px; text-align: center;">
+          <a href="mods-all.zip" download class="btn btn-secondary">
             <i class="fa-solid fa-download" aria-hidden="true"></i> Download All Mods (Recommended)
           </a>
         </div>
         <p class="text-muted" style="font-size: 0.9rem;">Extract the zip and place all .jar files in your <code>.minecraft/mods</code> folder.</p>
       </div>
       
-        <div style="margin: 20px 0;">
-        <h4 style="margin-bottom: 10px;"><i class="fa-solid fa-link" aria-hidden="true"></i> Option 2: Find & Download Individual Mods</h4>
-        <p class="text-muted" style="font-size: 0.9rem;">You can find and download individual mods from Modrinth or CurseForge. There is a list below</p>
+        <div>
+        <h4><i class="fa-solid fa-link" aria-hidden="true"></i> Option 2: Find & Download Individual Mods</h4>
+        <p class="text-muted" style="font-size: 0.9em;">You can find and download individual mods from Modrinth or CurseForge. There is a list below</p>
       </div>
       
       <p><strong>Don't forget:</strong> Install <a href="https://fabricmc.net/use/" target="_blank">Fabric Loader</a> for Minecraft 1.20.1 first!</p>
@@ -95,17 +186,17 @@
     <div class="card">
       <div class="mod-category">
         <h2>Required Mods (64 mods)</h2>
-        <p class="text-muted" style="margin-bottom: 20px;">
-          These mods are essential to join the server. Download <a href="mods-required.zip" download><strong>mods-required.zip</strong></a> 
+        <p class="text-muted">
+          These mods are essential to join the server. Download <strong><a href="mods-required.zip" download>mods-required.zip</a></strong>
           or find & install them yourself.
         </p>
         
-        <details style="margin-bottom: 20px;">
-          <summary style="cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-sm); font-weight: bold;">
+        <details>
+          <summary class="all-mods-summary">
             Click to view complete list of required mods
           </summary>
-          <div style="margin-top: 15px; padding: 0 15px; background: var(--bg-primary); border-radius: var(--radius-sm); font-family: monospace; font-size: 0.85rem; max-height: 400px; overflow-y: auto;">
-            <ul style="list-style: none; padding: 0;">
+          <div class="all-mods-list">
+            <ul>
               <li>amendments-1.20-2.2.3-fabric.jar</li>
               <li>architectury-9.2.14-fabric.jar</li>
               <li>bellsandwhistles-0.4.5+1.20.1-FABRIC.jar</li>
@@ -176,7 +267,7 @@
           </div>
         </details>
         
-        <h3 style="font-size: 1.2rem; margin-top: 25px; margin-bottom: 15px;">Some Required Mods:</h3>
+        <h3 class="highlighted-mods-title">Some Required Mods:</h3>
         
         <div class="mod-item">
           <h4>
@@ -232,17 +323,17 @@
     <div class="card">
       <div class="mod-category">
         <h2>Optional Mods (47 additional mods)</h2>
-        <p class="text-muted" style="margin-bottom: 20px;">
+        <p class="text-muted">
           These mods add visual improvements, performance optimizations, and quality of life features. 
-          Download <a href="mods-all.zip" download><strong>mods-all.zip</strong></a> to get everything (required + optional).
+          Download <strong><a href="mods-all.zip" download>mods-all.zip</a></strong> to get everything (required + optional).
         </p>
         
-        <details style="margin-bottom: 20px;">
-          <summary style="cursor: pointer; padding: 12px; background: var(--bg-tertiary); border-radius: var(--radius-sm); font-weight: bold;">
+        <details>
+          <summary class="all-mods-summary">
             Click to view complete list of optional mods
           </summary>
-          <div style="margin-top: 15px; padding: 0 15px; background: var(--bg-primary); border-radius: var(--radius-sm); font-family: monospace; font-size: 0.85rem; max-height: 400px; overflow-y: auto;">
-            <ul style="list-style: none; padding: 0;">
+          <div class="all-mods-list">
+            <ul>
               <li>advancementinfo-1.20-fabric0.83.0-1.4.jar</li>
               <li>animatica-0.6.1+1.20.4.jar</li>
               <li>appleskin-fabric-mc1.20.1-2.5.1.jar</li>
@@ -291,7 +382,7 @@
           </div>
         </details>
         
-        <h3 style="font-size: 1.2rem; margin-top: 25px; margin-bottom: 15px;">Highlighted Optional Mods:</h3>
+        <h3 class="highlighted-mods-title">Highlighted Optional Mods:</h3>
         
         <div class="mod-item">
           <h4>
@@ -411,7 +502,7 @@
     <div class="card">
       <div class="mod-category">
     <h2><i class="fa-solid fa-bolt" aria-hidden="true"></i> Performance Mods (Included in Optional Pack)</h2>
-        <p class="text-muted" style="margin-bottom: 20px;">These mods significantly improve client-side performance.</p>
+        <p class="text-muted">These mods significantly improve client-side performance.</p>
         
         <div class="mod-item">
           <h4>
@@ -489,22 +580,22 @@
     
     <!-- Summary -->
     <div class="card" style="background: var(--bg-secondary);">
-  <h2><i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Mod Summary</h2>
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 20px;">
-        <div style="background: var(--bg-tertiary); padding: 15px; border-radius: var(--radius-md); text-align: center;">
-          <div style="font-size: 2rem; color: var(--accent-danger); font-weight: bold;">64</div>
-          <div style="color: var(--text-muted); font-size: 0.9rem;">Required Mods</div>
+      <h2><i class="fa-solid fa-chart-simple" aria-hidden="true"></i> Mod Summary</h2>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-number stat-number-danger">64</div>
+          <div class="stat-label">Required Mods</div>
         </div>
-        <div style="background: var(--bg-tertiary); padding: 15px; border-radius: var(--radius-md); text-align: center;">
-          <div style="font-size: 2rem; color: var(--accent-secondary); font-weight: bold;">47</div>
-          <div style="color: var(--text-muted); font-size: 0.9rem;">Optional Mods</div>
+        <div class="stat-card">
+          <div class="stat-number stat-number-secondary">47</div>
+          <div class="stat-label">Optional Mods</div>
         </div>
-        <div style="background: var(--bg-tertiary); padding: 15px; border-radius: var(--radius-md); text-align: center;">
-          <div style="font-size: 2rem; color: var(--accent-primary); font-weight: bold;">111</div>
-          <div style="color: var(--text-muted); font-size: 0.9rem;">Total Mods</div>
+        <div class="stat-card">
+          <div class="stat-number stat-number-primary">111</div>
+          <div class="stat-label">Total Mods</div>
         </div>
       </div>
-      <div style="margin-top: 20px; text-align: center;">
+      <div style="margin: var(--spacing-md) 0; text-align: center;">
         <a href="mods-all.zip" download class="btn btn-primary" style="margin-right: 10px;"><i class="fa-solid fa-download" aria-hidden="true"></i> Download All (111 mods)</a>
         <a href="mods-required.zip" download class="btn" style="background: var(--accent-danger);"><i class="fa-solid fa-download" aria-hidden="true"></i> Download Required Only (64 mods)</a>
       </div>
