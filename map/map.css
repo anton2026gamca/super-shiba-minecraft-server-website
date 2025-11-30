@@ -144,6 +144,42 @@ html, body {
   color: var(--text-muted);
 }
 
+.show-options {
+  margin-left: var(--spacing-sm);
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 0;
+}
+
+.show-options div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.show-options label {
+  font-size: 14px;
+  cursor: pointer;
+  user-select: none;
+  color: var(--text-primary);
+  font-weight: bold;
+  font-family: 'Courier New', Courier, monospace;
+  text-transform: uppercase;
+}
+
+.show-options label:hover {
+  color: var(--accent-primary);
+}
+
+.show-options input[type="checkbox"] {
+  width: 12px;
+  height: 12px;
+  cursor: pointer;
+  accent-color: var(--accent-primary);
+}
+
 .iframe-container {
   /* flex: 1;
   position: relative; */

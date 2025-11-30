@@ -420,3 +420,99 @@ function centerOnPlayer(player) {
     // ignore storage errors
   }
 })();
+
+(function() {
+  const togglePlayers = document.getElementById('toggle-players');
+  const toggleMarkers = document.getElementById('toggle-markers');
+  const toggleBorder = document.getElementById('toggle-border');
+
+  function toggleDynmapLayer(layerName, visible) {
+    try {
+      const iframeWindow = iframe.contentWindow;
+      if (!iframeWindow.dynmap) return;
+
+      const layerManager = iframeWindow.dynmap.layercontrol;
+      if (!layerManager) return;
+
+      const layers = layerManager._layers;
+      for (let layerId in layers) {
+        const layer = layers[layerId];
+        if (layer.name && layer.name.toLowerCase().includes(layerName.toLowerCase())) {
+          if (visible) {
+            if (!iframeWindow.dynmap.map.hasLayer(layer.layer)) {
+              iframeWindow.dynmap.map.addLayer(layer.layer);
+            }
+          } else {
+            if (iframeWindow.dynmap.map.hasLayer(layer.layer)) {
+              iframeWindow.dynmap.map.removeLayer(layer.layer);
+            }
+          }
+        }
+      }
+    } catch (e) {
+      console.debug('Could not toggle layer:', layerName, e);
+    }
+  }
+
+  if (togglePlayers) {
+    togglePlayers.addEventListener('change', function() {
+      toggleDynmapLayer('players', this.checked);
+      try {
+        localStorage.setItem('ss_show_players', this.checked ? '1' : '0');
+      } catch (e) {}
+    });
+
+    try {
+      const savedState = localStorage.getItem('ss_show_players');
+      if (savedState === '0') {
+        togglePlayers.checked = false;
+      }
+    } catch (e) {}
+  }
+
+  if (toggleMarkers) {
+    toggleMarkers.addEventListener('change', function() {
+      toggleDynmapLayer('markers', this.checked);
+      try {
+        localStorage.setItem('ss_show_markers', this.checked ? '1' : '0');
+      } catch (e) {}
+    });
+
+    try {
+      const savedState = localStorage.getItem('ss_show_markers');
+      if (savedState === '0') {
+        toggleMarkers.checked = false;
+      }
+    } catch (e) {}
+  }
+
+  if (toggleBorder) {
+    toggleBorder.addEventListener('change', function() {
+      toggleDynmapLayer('border', this.checked);
+      try {
+        localStorage.setItem('ss_show_border', this.checked ? '1' : '0');
+      } catch (e) {}
+    });
+
+    try {
+      const savedState = localStorage.getItem('ss_show_border');
+      if (savedState === '1') {
+        toggleBorder.checked = true;
+      }
+    } catch (e) {}
+  }
+
+  iframe.addEventListener('load', function() {
+    setTimeout(() => {
+      if (togglePlayers && !togglePlayers.checked) {
+        toggleDynmapLayer('players', false);
+      }
+      if (toggleMarkers && !toggleMarkers.checked) {
+        toggleDynmapLayer('markers', false);
+      }
+      if (toggleBorder && toggleBorder.checked) {
+        toggleDynmapLayer('border', true);
+      }
+    }, 1500);
+  });
+})();
