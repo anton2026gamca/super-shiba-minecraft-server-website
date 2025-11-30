@@ -33,8 +33,11 @@ const mapButtonsContainer = document.getElementById('map-buttons');
 const loadingText = document.getElementById('map-loading');
 const playersListContainer = document.getElementById('players-list');
 const playerCountElement = document.getElementById('player-count');
+const locationWorldElement = document.getElementById('location-world');
+const locationXElement = document.getElementById('location-x');
+const locationYElement = document.getElementById('location-y');
+const locationZElement = document.getElementById('location-z');
 let currentMapIndex = 0;
-let updateInterval = null;
 let worldPositions = {};
 let currentWorldName = null;
 let currentMapName = null;
@@ -64,7 +67,6 @@ iframe.addEventListener('load', function() {
       .dynmap .sidebar,
       .dynmap .compass,
       .digitalsignature,
-      div.coord-control,
       div.clock,
       div.link-control,
       div.compass,
@@ -89,11 +91,12 @@ iframe.addEventListener('load', function() {
   }
   
   updatePlayers();
-  updateInterval = setInterval(updatePlayers, 1000);
+  setInterval(updatePlayers, 1000);
   
   initChat(iframe, () => currentWorldName);
   
   setInterval(updateCurrentPosition, 1000);
+  setInterval(updateLocationDisplay, 50);
 });
 
 function displayMapsFromConfig() {
@@ -198,6 +201,27 @@ function updateCurrentPosition() {
     }
   } catch (e) {
     console.debug('Could not update position:', e.message);
+  }
+}
+
+function updateLocationDisplay() {
+  const dynmapSpans = (iframe.contentDocument).getElementsByClassName('coord-control-value');
+  if (dynmapSpans.length <= 0) {
+    if (locationXElement) locationXElement.textContent = '---';
+    if (locationYElement) locationYElement.textContent = '---';
+    if (locationZElement) locationZElement.textContent = '---';
+  } else {
+    const values = dynmapSpans[0].innerHTML.split(',')
+    if (locationXElement) locationXElement.textContent = values[0] || '---';
+    if (locationYElement) locationYElement.textContent = values[1] || '---';
+    if (locationZElement) locationZElement.textContent = values[2] || '---';
+  }
+
+  if (locationWorldElement && currentWorldName) {
+    const world = WORLDS_CONFIG.find(w => w.worldName === currentWorldName);
+    if (world) {
+      locationWorldElement.textContent = world.displayName;
+    }
   }
 }
 
@@ -379,9 +403,3 @@ function centerOnPlayer(player) {
     // ignore storage errors
   }
 })();
-
-window.addEventListener('beforeunload', () => {
-  if (updateInterval) {
-    clearInterval(updateInterval);
-  }
-});
