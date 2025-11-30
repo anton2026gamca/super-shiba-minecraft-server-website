@@ -96,7 +96,24 @@ iframe.addEventListener('load', function() {
   initChat(iframe, () => currentWorldName);
   
   setInterval(updateCurrentPosition, 1000);
-  setInterval(updateLocationDisplay, 50);
+  
+  let _locUpdateScheduled = false;
+  const scheduleLocationUpdate = () => {
+    if (_locUpdateScheduled) return;
+    _locUpdateScheduled = true;
+    requestAnimationFrame(() => {
+      try { updateLocationDisplay(); } finally { _locUpdateScheduled = false; }
+    });
+  };
+
+  document.addEventListener('mousemove', scheduleLocationUpdate);
+  document.addEventListener('pointermove', scheduleLocationUpdate);
+
+  const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+  if (iframeDoc) {
+    iframeDoc.addEventListener('mousemove', scheduleLocationUpdate);
+    iframeDoc.addEventListener('pointermove', scheduleLocationUpdate);
+  }
 });
 
 function displayMapsFromConfig() {
