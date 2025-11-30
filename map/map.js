@@ -91,6 +91,8 @@ iframe.addEventListener('load', function() {
   updatePlayers();
   updateInterval = setInterval(updatePlayers, 1000);
   
+  initChat(iframe, () => currentWorldName);
+  
   setInterval(updateCurrentPosition, 1000);
 });
 
@@ -352,6 +354,7 @@ function centerOnPlayer(player) {
     sidebarEl.style.display = 'none';
     if (openSidebarBtn) openSidebarBtn.style.display = 'inline-block';
     if (iframeContainerEl) iframeContainerEl.style.flex = '1';
+    document.body.classList.add('sidebar-hidden');
     try { localStorage.setItem('ss_sidebar_hidden', '1'); } catch (e) {}
   }
 
@@ -359,6 +362,7 @@ function centerOnPlayer(player) {
     if (!sidebarEl) return;
     sidebarEl.style.display = '';
     if (openSidebarBtn) openSidebarBtn.style.display = 'none';
+    document.body.classList.remove('sidebar-hidden');
     try { localStorage.removeItem('ss_sidebar_hidden'); } catch (e) {}
   }
 
@@ -368,6 +372,8 @@ function centerOnPlayer(player) {
   try {
     if (localStorage.getItem('ss_sidebar_hidden')) {
       closeSidebar();
+    } else {
+      document.body.classList.remove('sidebar-hidden');
     }
   } catch (e) {
     // ignore storage errors

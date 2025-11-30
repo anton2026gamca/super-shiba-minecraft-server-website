@@ -48,6 +48,40 @@
     <i class="fa-solid fa-bars" aria-hidden="true"></i>
   </div>
 
+  <div class="map-ui">
+    <div id="chat-container" class="chat-container">
+      <div id="chat-messages" class="chat-messages"></div>
+      <div class="chat-input-bar">
+        <button id="chat-history-btn" class="btn chat-history-btn" title="View chat history">
+          <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+        </button>
+        <input type="text" id="chat-input" class="chat-input" placeholder="Send a message..." maxlength="256">
+        <button id="chat-send" class="btn btn-primary chat-send-btn">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="chat-history-modal" class="chat-history-modal">
+    <div class="chat-history-container">
+      <div class="chat-history-header">
+        <h2>Chat History</h2>
+        <button id="chat-history-close" class="btn chat-history-close">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+      <div id="chat-history-messages" class="chat-history-messages"></div>
+      <div class="chat-input-bar">
+        <input type="text" id="chat-history-input" class="chat-input" placeholder="Send a message..." maxlength="256">
+        <button id="chat-history-send" class="btn btn-primary chat-send-btn">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <script src="map.js"></script>
+  <script src="chat.js"></script>
 </body>
 </html>
