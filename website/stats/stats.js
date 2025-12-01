@@ -65,6 +65,14 @@ function updateSystemStats(data) {
         ${system.ram_used_mb.toFixed(0)} / ${system.ram_total_mb.toFixed(0)} MB
       </div>
     </div>
+    <div class="stat-card ${getStatClass(system.swap)}">
+      <div class="stat-icon"><i class="fa-solid fa-memory"></i></div>
+      <div class="stat-value">${system.swap.toFixed(1)}%</div>
+      <div class="stat-label">Swap Usage</div>
+      <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
+        ${system.swap_used_mb.toFixed(0)} / ${system.swap_total_mb.toFixed(0)} MB
+      </div>
+    </div>
     <div class="stat-card ${getStatClass(system.disk)}">
       <div class="stat-icon"><i class="fa-solid fa-hard-drive"></i></div>
       <div class="stat-value">${system.disk.toFixed(1)}%</div>
@@ -167,6 +175,36 @@ function createCharts(history) {
         data: history.map(d => d.system.ram),
         borderColor: '#2ecc71',
         backgroundColor: 'rgba(46, 204, 113, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      ...chartOptions,
+      scales: {
+        ...chartOptions.scales,
+        y: {
+          ...chartOptions.scales.y,
+          max: 100
+        }
+      }
+    }
+  });
+
+  if (charts.swap) charts.swap.destroy();
+  charts.swap = new Chart(document.getElementById('swap-chart'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Swap Usage (%)',
+        data: history.map(d => {
+          const swapTotal = d.system.swap_total_mb;
+          const swapUsed = d.system.swap_used_mb;
+          return swapTotal > 0 ? (swapUsed / swapTotal) * 100 : 0;
+        }),
+        borderColor: '#f39c12',
+        backgroundColor: 'rgba(243, 156, 18, 0.1)',
         tension: 0.4,
         fill: true
       }]
