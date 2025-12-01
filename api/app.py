@@ -5,12 +5,10 @@ app = Flask(__name__)
 
 @app.get("/stats/now")
 def get_stats_now():
-    """Get current system and container stats"""
     return jsonify(get_last_history_entry())
 
 @app.get("/stats/history")
 def get_stats_history():
-    """Get historical data for graphing"""
     return jsonify(get_history())
 
 if __name__ == "__main__":
