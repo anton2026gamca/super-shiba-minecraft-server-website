@@ -26,6 +26,7 @@ def get_temp():
         return None
 
 def get_container_memory_usage(container):
+    try:
         pid = container.attrs['State']['Pid']
         if not pid or pid <= 0:
             return 0.0
