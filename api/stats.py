@@ -107,6 +107,7 @@ def get_container_stats():
 
 def get_system_stats():
     mem = psutil.virtual_memory()
+    swap = psutil.swap_memory()
     disk = psutil.disk_usage("/")
     net = psutil.net_io_counters()
     
@@ -115,6 +116,9 @@ def get_system_stats():
         "ram": mem.percent,
         "ram_used_mb": round(mem.used / MB, 2),
         "ram_total_mb": round(mem.total / MB, 2),
+        "swap": swap.percent,
+        "swap_total_mb": round(swap.total / MB, 2),
+        "swap_used_mb": round(swap.used / MB, 2),
         "disk": disk.percent,
         "disk_used_gb": round(disk.used / GB, 2),
         "disk_total_gb": round(disk.total / GB, 2),
