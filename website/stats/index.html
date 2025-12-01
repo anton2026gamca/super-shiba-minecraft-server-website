@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Shiba Server Stats</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="../theme.css">
+  <style>
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-md);
+      margin: var(--spacing-lg) 0;
+    }
+
+    .stat-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+      text-align: center;
+    }
+
+    .stat-card .stat-icon {
+      font-size: 2rem;
+      margin-bottom: var(--spacing-sm);
+      color: var(--accent-primary);
+    }
+
+    .stat-card .stat-value {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin: var(--spacing-xs) 0;
+    }
+
+    .stat-card .stat-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .stat-card.warning .stat-value {
+      color: var(--accent-warning);
+    }
+
+    .stat-card.danger .stat-value {
+      color: var(--accent-danger);
+    }
+
+    .stat-card.success .stat-value {
+      color: var(--accent-secondary);
+    }
+
+    .chart-container {
+      position: relative;
+      height: 300px;
+      margin: var(--spacing-md) 0;
+    }
+
+    .chart-card {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chart-card h3 {
+      margin-top: 0;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: var(--spacing-sm);
+      color: var(--text-primary);
+    }
+
+    .container-list {
+      margin-top: var(--spacing-lg);
+    }
+
+    .container-item {
+      background: var(--bg-tertiary);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+      border: 1px solid var(--border-color);
+    }
+
+    .container-item h4 {
+      margin: 0 0 var(--spacing-sm) 0;
+      color: var(--accent-primary);
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+    }
+
+    .container-item .status-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .container-item .status-badge.running {
+      background: var(--accent-secondary);
+      color: var(--text-dark);
+    }
+
+    .container-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: var(--spacing-sm);
+      margin-top: var(--spacing-sm);
+      font-size: 0.9rem;
+    }
+
+    .container-stat {
+      color: var(--text-secondary);
+    }
+
+    .container-stat strong {
+      color: var(--text-primary);
+    }
+
+    .error-message {
+      background: var(--bg-secondary);
+      border: 2px solid var(--accent-danger);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+      text-align: center;
+      color: var(--accent-danger);
+    }
+
+    .loading {
+      text-align: center;
+      padding: var(--spacing-xl);
+      color: var(--text-muted);
+      font-size: 1.2rem;
+    }
+
+    .last-update {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: var(--spacing-md);
+    }
+
+    .controls {
+      display: flex;
+      gap: var(--spacing-sm);
+      justify-content: center;
+      margin: var(--spacing-lg) 0;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      }
+      
+      .chart-container {
+        height: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1><i class="fa-solid fa-chart-line" aria-hidden="true"></i> Server Resource Usage Statistics</h1>
+    <p class="tagline">Real-time system and container monitoring</p>
+  </header>
+
+  <div class="container">
+    <div class="controls">
+      <a href="../" class="btn"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back to Home</a>
+      <button id="refresh-btn" class="btn btn-primary"><i class="fa-solid fa-rotate" aria-hidden="true"></i> Refresh Now</button>
+      <button id="toggle-auto-refresh" class="btn btn-secondary"><i class="fa-solid fa-pause" aria-hidden="true"></i> Auto-Refresh: ON</button>
+    </div>
+
+    <div id="loading" class="loading">
+      <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Loading statistics...
+    </div>
+
+    <div id="error" class="error-message" style="display: none;">
+      <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+      <p><strong>Failed to load statistics</strong></p>
+      <p id="error-message"></p>
+    </div>
+
+    <div id="stats-content" style="display: none;">
+      <h2>System Overview</h2>
+      <div class="stats-grid" id="system-stats"></div>
+
+      <h2 style="margin-top: var(--spacing-xl);">Historical Data</h2>
+      
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-microchip" aria-hidden="true"></i> CPU Usage</h3>
+        <div class="chart-container">
+          <canvas id="cpu-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-memory" aria-hidden="true"></i> Memory Usage</h3>
+        <div class="chart-container">
+          <canvas id="memory-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-temperature-half" aria-hidden="true"></i> CPU Temperature</h3>
+        <div class="chart-container">
+          <canvas id="temp-chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fa-solid fa-network-wired" aria-hidden="true"></i> Network Traffic</h3>
+        <div class="chart-container">
+          <canvas id="network-chart"></canvas>
+        </div>
+      </div>
+
+      <h2 style="margin-top: var(--spacing-xl);"><i class="fa-brands fa-docker" aria-hidden="true"></i> Docker Containers</h2>
+      <div id="containers" class="container-list"></div>
+
+      <div class="last-update">
+        Last updated: <span id="last-update">Never</span>
+      </div>
+    </div>
+
+    <footer class="site-contrib">
+      <a href="https://github.com/anton2026gamca/super-shiba-minecraft-server-website" target="_blank" rel="noopener">
+        <svg aria-hidden="true" viewBox="0 0 16 16" version="1.1" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.58.82-2.14-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.14 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.19 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        Contribute on GitHub
+      </a>
+    </footer>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="stats.js"></script>
+</body>
+</html>
