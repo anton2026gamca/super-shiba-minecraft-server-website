@@ -51,28 +51,28 @@ function formatTimestamp(timestamp) {
 
 function updateSystemStats(data) {
   const system = data.system;
-  const statsHtml = `
-    <div class="stat-card ${getStatClass(system.cpu)}">
+  const statsHtml = /*html*/`
+    <a href="#cpu-usage" class="stat-card ${getStatClass(system.cpu)}">
       <div class="stat-icon"><i class="fa-solid fa-microchip"></i></div>
       <div class="stat-value">${system.cpu.toFixed(1)}%</div>
       <div class="stat-label">CPU Usage</div>
-    </div>
-    <div class="stat-card ${getStatClass(system.ram)}">
+    </a>
+    <a href="#ram-usage" class="stat-card ${getStatClass(system.ram)}">
       <div class="stat-icon"><i class="fa-solid fa-memory"></i></div>
       <div class="stat-value">${system.ram.toFixed(1)}%</div>
       <div class="stat-label">RAM Usage</div>
       <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
         ${system.ram_used_mb.toFixed(0)} / ${system.ram_total_mb.toFixed(0)} MB
       </div>
-    </div>
-    <div class="stat-card ${getStatClass(system.swap)}">
+    </a>
+    <a href="#swap-usage" class="stat-card ${getStatClass(system.swap)}">
       <div class="stat-icon"><i class="fa-solid fa-memory"></i></div>
       <div class="stat-value">${system.swap.toFixed(1)}%</div>
       <div class="stat-label">Swap Usage</div>
       <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
         ${system.swap_used_mb.toFixed(0)} / ${system.swap_total_mb.toFixed(0)} MB
       </div>
-    </div>
+    </a>
     <div class="stat-card ${getStatClass(system.disk)}">
       <div class="stat-icon"><i class="fa-solid fa-hard-drive"></i></div>
       <div class="stat-value">${system.disk.toFixed(1)}%</div>
@@ -81,21 +81,21 @@ function updateSystemStats(data) {
         ${system.disk_used_gb.toFixed(1)} / ${system.disk_total_gb.toFixed(1)} GB
       </div>
     </div>
-    <div class="stat-card ${system.temperature ? getStatClass(system.temperature, 60, 75) : ''}">
+    <a href="#cpu-temp" class="stat-card ${system.temperature ? getStatClass(system.temperature, 60, 75) : ''}">
       <div class="stat-icon"><i class="fa-solid fa-temperature-half"></i></div>
       <div class="stat-value">${system.temperature ? system.temperature.toFixed(1) + '°C' : 'N/A'}</div>
       <div class="stat-label">CPU Temp</div>
-    </div>
-    <div class="stat-card">
+    </a>
+    <a href="#network-traffic" class="stat-card">
       <div class="stat-icon"><i class="fa-solid fa-arrow-down"></i></div>
       <div class="stat-value">${system.network_rx_mb.toFixed(1)}</div>
       <div class="stat-label">Network RX (MB)</div>
-    </div>
-    <div class="stat-card">
+    </a>
+    <a href="#network-traffic" class="stat-card">
       <div class="stat-icon"><i class="fa-solid fa-arrow-up"></i></div>
       <div class="stat-value">${system.network_tx_mb.toFixed(1)}</div>
       <div class="stat-label">Network TX (MB)</div>
-    </div>
+    </a>
   `;
   document.getElementById('system-stats').innerHTML = statsHtml;
 }
@@ -106,7 +106,7 @@ function updateContainers(containers) {
     return;
   }
 
-  const containersHtml = containers.map(c => `
+  const containersHtml = containers.map(c => /*html*/`
     <div class="container-item">
       <h4>
         <i class="fa-brands fa-docker"></i>
@@ -138,7 +138,7 @@ function createCharts(history) {
     const date = new Date(d.timestamp);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   });
-  
+
   if (charts.cpu) charts.cpu.destroy();
   charts.cpu = new Chart(document.getElementById('cpu-chart'), {
     type: 'line',
@@ -305,7 +305,7 @@ async function loadStats() {
 function toggleAutoRefresh() {
   autoRefresh = !autoRefresh;
   const btn = document.getElementById('toggle-auto-refresh');
-  
+
   if (autoRefresh) {
     btn.innerHTML = '<i class="fa-solid fa-pause" aria-hidden="true"></i> Auto-Refresh: ON';
     btn.classList.remove('btn-primary');

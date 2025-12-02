@@ -12,6 +12,15 @@
   border: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
   text-align: center;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+a.stat-card:hover {
+  text-decoration: none;
+  border: 2px solid var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .stat-card .stat-icon {
