@@ -86,7 +86,16 @@ a.stat-card:hover {
   border-radius: var(--radius-md);
   padding: var(--spacing-md);
   margin-bottom: var(--spacing-md);
-  border: 1px solid var(--border-color);
+  border: 2px solid transparent;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.3s ease;
+}
+
+.container-item:hover {
+  border: 2px solid var(--accent-primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .container-item h4 {
@@ -95,6 +104,16 @@ a.stat-card:hover {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
+}
+
+.container-item .expand-icon {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+  font-size: 0.9rem;
+}
+
+.container-item.expanded .expand-icon {
+  transform: rotate(180deg);
 }
 
 .container-item .status-badge {
@@ -118,6 +137,20 @@ a.stat-card:hover {
   gap: var(--spacing-sm);
   margin-top: var(--spacing-sm);
   font-size: 0.9rem;
+}
+
+.container-item .chart-container {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease, margin-top 0.3s ease;
+  margin-top: 0;
+}
+
+.container-item.expanded .chart-container {
+  max-height: 350px;
+  opacity: 1;
+  margin-top: var(--spacing-md);
 }
 
 .container-stat {

@@ -110,11 +110,12 @@ function updateContainers(containers, history) {
   charts.containers = {};
 
   const containersHtml = containers.map(c => /*html*/`
-    <div class="container-item">
+    <div class="container-item" data-container="${c.name}">
       <h4>
         <i class="fa-brands fa-docker"></i>
         ${c.name}
         <span class="status-badge ${c.status}">${c.status}</span>
+        <i class="fa-solid fa-chevron-down expand-icon"></i>
       </h4>
       <div class="container-stats">
         <div class="container-stat">
@@ -136,6 +137,11 @@ function updateContainers(containers, history) {
     </div>
   `).join('');
   document.getElementById('containers').innerHTML = containersHtml;
+  document.querySelectorAll('.container-item').forEach(header => {
+    header.addEventListener('click', function() {
+      this.classList.toggle('expanded');
+    });
+  });
 
   const labels = history.map(d => {
     const date = new Date(d.timestamp);
