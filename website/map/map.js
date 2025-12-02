@@ -42,6 +42,8 @@ let worldPositions = {};
 let currentWorldName = null;
 let currentMapName = null;
 
+const url = new URL(window.location.href);
+
 iframe.addEventListener('load', function() {
   try {
     const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
@@ -119,9 +121,15 @@ iframe.addEventListener('load', function() {
 function displayMapsFromConfig() {
   mapButtonsContainer.innerHTML = '';
   loadingText.style.display = 'none';
-  
-  let isFirst = true;
-  
+
+  let selectedWorldName = url.searchParams.get('world') || WORLDS_CONFIG[0].displayName;
+  let selectedWorld = WORLDS_CONFIG.find(w => w.displayName.toLowerCase() === selectedWorldName.toLowerCase().replace('_', ' ')) || WORLDS_CONFIG[0];
+  let selectedMap = selectedWorld?.maps.find(m => m.displayName.toLowerCase() === url.searchParams.get('map')?.toLowerCase().replace('_', ' ')) || selectedWorld.maps[0];
+
+  const urlX = url.searchParams.get('x');
+  const urlZ = url.searchParams.get('z');
+  const urlZoom = url.searchParams.get('zoom');
+
   WORLDS_CONFIG.forEach((world) => {
     const worldHeader = document.createElement('div');
     worldHeader.classList.add('world-header');
@@ -135,6 +143,8 @@ function displayMapsFromConfig() {
       button.dataset.worldName = world.worldName;
       button.dataset.mapName = map.mapName;
       button.dataset.defaultZoom = world.defaultZoom;
+      const isSelected = selectedWorld.displayName === world.displayName && selectedMap.displayName === map.displayName;
+      
       if (map.disabled) {
         button.disabled = true;
         const lock = document.createElement('i');
@@ -142,18 +152,27 @@ function displayMapsFromConfig() {
         lock.setAttribute('aria-hidden', 'true');
         button.appendChild(lock);
       } else {
-        if (isFirst) {
-          button.classList.add('active');
-          currentWorldName = world.worldName;
-          currentMapName = map.mapName;
-          isFirst = false;
-        }
-
         button.addEventListener('click', () => {
           switchToMap(world.worldName, map.mapName, world.defaultZoom);
           document.querySelectorAll('.map-button').forEach(b => b.classList.remove('active'));
           button.classList.add('active');
         });
+      }
+
+      if (isSelected) {
+        button.classList.add('active');
+        currentWorldName = world.worldName;
+        currentMapName = map.mapName;
+        
+        if (urlX !== null && urlZ !== null) {
+          worldPositions[world.worldName] = {
+            x: parseFloat(urlX),
+            z: parseFloat(urlZ),
+            zoom: urlZoom !== null ? parseInt(urlZoom) : world.defaultZoom
+          };
+        }
+        
+        switchToMap(world.worldName, map.mapName, world.defaultZoom);
       }
       
       mapButtonsContainer.appendChild(button);
@@ -510,8 +529,8 @@ function centerOnPlayer(player) {
       if (toggleMarkers && !toggleMarkers.checked) {
         toggleDynmapLayer('markers', false);
       }
-      if (toggleBorder && toggleBorder.checked) {
-        toggleDynmapLayer('border', true);
+      if (toggleBorder && !toggleBorder.checked) {
+        toggleDynmapLayer('border', false);
       }
     }, 1500);
   });

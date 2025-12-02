@@ -86,7 +86,7 @@ html, body {
   background: var(--accent-primary);
 }
 
-.map-button:disabled {
+.map-button:disabled:not(.active) {
   cursor: default;
   opacity: 0.6;
   filter: grayscale(10%);
