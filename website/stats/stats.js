@@ -100,11 +100,14 @@ function updateSystemStats(data) {
   document.getElementById('system-stats').innerHTML = statsHtml;
 }
 
-function updateContainers(containers) {
+function updateContainers(containers, history) {
   if (!containers || containers.length === 0) {
     document.getElementById('containers').innerHTML = '<p class="text-muted text-center">No containers running</p>';
     return;
   }
+
+  Object.values(charts?.containers | {}).forEach(chart => chart.destroy());
+  charts.containers = {};
 
   const containersHtml = containers.map(c => /*html*/`
     <div class="container-item">
@@ -127,10 +130,55 @@ function updateContainers(containers) {
           <i class="fa-solid fa-arrow-up"></i> TX: <strong>${c.network_tx_mb.toFixed(2)} MB</strong>
         </div>
       </div>
+      <div class="chart-container">
+        <canvas id="container-${c.name}-chart"></canvas>
+      </div>
     </div>
   `).join('');
-
   document.getElementById('containers').innerHTML = containersHtml;
+
+  const labels = history.map(d => {
+    const date = new Date(d.timestamp);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  });
+  containers.forEach((c, i) => {
+    charts.containers[c.name] = new Chart(document.getElementById(`container-${c.name}-chart`), {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'CPU Usage (%)',
+            data: history.map(d => d.containers[i].cpu_percent),
+            borderColor: '#f39c12',
+            backgroundColor: 'rgba(243, 156, 18, 0.1)',
+            tension: 0.4,
+            fill: true
+          },
+          {
+            label: 'RAM Usage (%)',
+            data: history.map(d => d.containers[i].memory_percent),
+            borderColor: '#2ecc71',
+            backgroundColor: 'rgba(46, 204, 113, 0.1)',
+            tension: 0.4,
+            fill: true
+          }
+        ]
+      },
+      options: {
+        ...chartOptions,
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          ...chartOptions.scales,
+          y: {
+            ...chartOptions.scales.y,
+            max: 100
+          }
+        }
+      }
+    });
+  });
 }
 
 function createCharts(history) {
@@ -147,8 +195,8 @@ function createCharts(history) {
       datasets: [{
         label: 'CPU Usage (%)',
         data: history.map(d => d.system.cpu),
-        borderColor: '#3498db',
-        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+        borderColor: '#f39c12',
+        backgroundColor: 'rgba(243, 156, 18, 0.1)',
         tension: 0.4,
         fill: true
       }]
@@ -199,8 +247,8 @@ function createCharts(history) {
       datasets: [{
         label: 'Swap Usage (%)',
         data: history.map(d => d.system.swap),
-        borderColor: '#f39c12',
-        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+        borderColor: '#16a085',
+        backgroundColor: 'rgba(22,160,133,0.1)',
         tension: 0.4,
         fill: true
       }]
@@ -225,8 +273,8 @@ function createCharts(history) {
       datasets: [{
         label: 'Disk Usage (%)',
         data: history.map(d => d.system.disk),
-        borderColor: '#16a085',
-        backgroundColor: 'rgba(22,160,133,0.1)',
+        borderColor: '#3498db',
+        backgroundColor: 'rgba(52, 152, 219, 0.1)',
         tension: 0.4,
         fill: true
       }]
@@ -269,8 +317,8 @@ function createCharts(history) {
         {
           label: 'RX (MB)',
           data: history.map(d => d.system.network_rx_mb),
-          borderColor: '#3498db',
-          backgroundColor: 'rgba(52, 152, 219, 0.1)',
+          borderColor: 'rgba(120, 79, 255, 1)',
+          backgroundColor: 'rgba(120, 79, 255, 0.1)',
           tension: 0.4,
           fill: true
         },
@@ -311,7 +359,7 @@ async function loadStats() {
     document.getElementById('stats-content').style.display = 'block';
 
     updateSystemStats(nowData);
-    updateContainers(nowData.containers);
+    updateContainers(nowData.containers, historyData.data);
     createCharts(historyData.data);
 
     document.getElementById('last-update').textContent = new Date().toLocaleString();
