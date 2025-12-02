@@ -13,7 +13,7 @@ const WORLDS_CONFIG = [
     displayName: 'Nether',
     defaultZoom: 2,
     maps: [
-      { mapName: 'flat', displayName: 'Flat', disabled: true },
+      { mapName: 'flat', displayName: 'Flat', disabled: false },
       { mapName: 'nether', displayName: '3D', disabled: true }
     ]
   },
