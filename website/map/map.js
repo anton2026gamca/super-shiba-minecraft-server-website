@@ -5,7 +5,7 @@ const WORLDS_CONFIG = [
     defaultZoom: 0,
     maps: [
       { mapName: 'flat', displayName: 'Flat', disabled: false },
-      { mapName: 'surface', displayName: '3D', disabled: true }
+      { mapName: 'surface', displayName: '3D', disabled: false }
     ]
   },
   {
@@ -14,7 +14,7 @@ const WORLDS_CONFIG = [
     defaultZoom: 2,
     maps: [
       { mapName: 'flat', displayName: 'Flat', disabled: false },
-      { mapName: 'nether', displayName: '3D', disabled: true }
+      { mapName: 'nether', displayName: '3D', disabled: false }
     ]
   },
   {
