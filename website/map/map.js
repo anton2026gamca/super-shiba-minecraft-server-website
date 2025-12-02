@@ -187,7 +187,7 @@ function switchToMap(worldName, mapName, defaultZoom) {
   
   let position = worldPositions[worldName] || { x: 0, z: 0, zoom: defaultZoom };
   
-  const link = `dynmap/?worldname=${encodeURIComponent(worldName)}&mapname=${encodeURIComponent(mapName)}&zoom=${position.zoom}&x=${position.x}&z=${position.z}`;
+  const link = `dynmap/?worldname=${encodeURIComponent(worldName)}&mapname=${encodeURIComponent(mapName)}&zoom=${position.zoom}&x=${position.x}&z=${position.z}&y=64`;
   
   currentWorldName = worldName;
   currentMapName = mapName;
