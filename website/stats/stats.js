@@ -73,14 +73,14 @@ function updateSystemStats(data) {
         ${system.swap_used_mb.toFixed(0)} / ${system.swap_total_mb.toFixed(0)} MB
       </div>
     </a>
-    <div class="stat-card ${getStatClass(system.disk)}">
+    <a href="#disk-usage" class="stat-card ${getStatClass(system.disk)}">
       <div class="stat-icon"><i class="fa-solid fa-hard-drive"></i></div>
       <div class="stat-value">${system.disk.toFixed(1)}%</div>
       <div class="stat-label">Disk Usage</div>
       <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
         ${system.disk_used_gb.toFixed(1)} / ${system.disk_total_gb.toFixed(1)} GB
       </div>
-    </div>
+    </a>
     <a href="#cpu-temp" class="stat-card ${system.temperature ? getStatClass(system.temperature, 60, 75) : ''}">
       <div class="stat-icon"><i class="fa-solid fa-temperature-half"></i></div>
       <div class="stat-value">${system.temperature ? system.temperature.toFixed(1) + '°C' : 'N/A'}</div>
@@ -198,13 +198,35 @@ function createCharts(history) {
       labels: labels,
       datasets: [{
         label: 'Swap Usage (%)',
-        data: history.map(d => {
-          const swapTotal = d.system.swap_total_mb;
-          const swapUsed = d.system.swap_used_mb;
-          return swapTotal > 0 ? (swapUsed / swapTotal) * 100 : 0;
-        }),
+        data: history.map(d => d.system.swap),
         borderColor: '#f39c12',
         backgroundColor: 'rgba(243, 156, 18, 0.1)',
+        tension: 0.4,
+        fill: true
+      }]
+    },
+    options: {
+      ...chartOptions,
+      scales: {
+        ...chartOptions.scales,
+        y: {
+          ...chartOptions.scales.y,
+          max: 100
+        }
+      }
+    }
+  });
+
+  if (charts.disk) charts.disk.destroy();
+  charts.disk = new Chart(document.getElementById('disk-chart'), {
+    type: 'line',
+    data: {
+      labels: labels,
+      datasets: [{
+        label: 'Disk Usage (%)',
+        data: history.map(d => d.system.disk),
+        borderColor: '#16a085',
+        backgroundColor: 'rgba(22,160,133,0.1)',
         tension: 0.4,
         fill: true
       }]
