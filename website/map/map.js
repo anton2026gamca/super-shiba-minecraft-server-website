@@ -535,3 +535,32 @@ function centerOnPlayer(player) {
     }, 1500);
   });
 })();
+
+(function() {
+  function copyLink() {
+    const link = new URL(window.location.href);
+    if (currentWorldName) {
+      link.searchParams.set('world', WORLDS_CONFIG.find(w => w.worldName === currentWorldName)?.displayName.toLowerCase().replace(' ', '_') || '');
+      link.searchParams.set('map', currentMapName ? WORLDS_CONFIG.find(w => w.worldName === currentWorldName)?.maps.find(m => m.mapName === currentMapName)?.displayName.toLowerCase().replace(' ', '_') : '');
+      const pos = worldPositions[currentWorldName];
+      if (pos) {
+        link.searchParams.set('x', Math.round(pos.x));
+        link.searchParams.set('z', Math.round(pos.z));
+        link.searchParams.set('zoom', pos.zoom);
+      }
+    }
+    console.log(link.toString(), link);
+    navigator.clipboard.writeText(link.toString())
+
+    const copiedText = document.getElementById('copied-text');
+    copiedText.style.animation = 'copied-text-show 1s ease-in-out';
+    setTimeout(() => {
+      copiedText.style.animation = '';
+    }, 1000);
+  }
+
+  const copyLinkBtn = document.getElementById('copy-link-btn');
+  if (copyLinkBtn) {
+    copyLinkBtn.addEventListener('click', copyLink);
+  }
+})();
