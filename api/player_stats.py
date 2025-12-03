@@ -39,11 +39,18 @@ def get_player_list():
 
 def get_player_stats(player_uuid):
     try:
-        stats_file = os.path.join(STATS_DIR, f"{player_uuid}.json")
-        if not os.path.exists(stats_file):
-            return {"error": "Player stats not found"}, 404
-        with open(stats_file, 'r') as f:
-            stats_data = json.load(f)
-        return stats_data, 200
+        try_paths = [
+            player_uuid,
+            player_uuid[0:8] + '-' + player_uuid[8:12] + '-' + player_uuid[12:16] + '-' + player_uuid[16:20] + '-' + player_uuid[20:32]
+        ]
+        for try_uuid in try_paths:
+            stats_file = os.path.join(STATS_DIR, f"{try_uuid}.json")
+            if os.path.exists(stats_file):
+                with open(stats_file, 'r') as f:
+                    stats_data = json.load(f)
+                return stats_data, 200
+        return {"error": "Player stats not found"}, 404
+    except Exception as e:
+        return {"error": str(e)}, 500
     except Exception as e:
         return {"error": str(e)}, 500
