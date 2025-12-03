@@ -345,8 +345,8 @@ function createCharts(history) {
 async function loadStats() {
   try {
     const [nowResponse, historyResponse] = await Promise.all([
-      fetch(`${API_BASE}/stats/now`),
-      fetch(`${API_BASE}/stats/history`)
+      fetch(`${API_BASE}/resource-usage/now`),
+      fetch(`${API_BASE}/resource-usage/history`)
     ]);
 
     if (!nowResponse.ok || !historyResponse.ok) {
