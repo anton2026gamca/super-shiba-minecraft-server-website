@@ -246,3 +246,20 @@ code {
   vertical-align: text-bottom;
   fill: currentColor;
 }
+
+.error-message {
+  background: var(--bg-secondary);
+  border: 2px solid var(--accent-danger);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm);
+  margin: var(--spacing-lg) 0;
+  text-align: center;
+  color: var(--accent-danger);
+}
+.error-message i {
+  margin-top: var(--spacing-sm);
+  font-size: 1.5em;
+}
+.error-message p {
+  margin: var(--spacing-sm);
+}
