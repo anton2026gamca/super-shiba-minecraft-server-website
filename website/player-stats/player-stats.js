@@ -456,11 +456,20 @@ function renderLeaderboards() {
   
   leaderboards.forEach(leaderboard => {
     if (leaderboard.entries.length === 0) return;
-    
+
+    const id = `leaderboard-${leaderboard.statName.toLowerCase().replace(/ /g, '-')}`;
+    console.log(url.hash, id);
+    const highlightClass = url.hash && url.hash.includes(`#${id}`) ? 'highlighted' : '';
+    if (highlightClass) {
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 0);
+    }
     html += /*html*/`
-      <div class="leaderboard-card" id="leaderboard-${leaderboard.statName.toLowerCase().replace(/ /g, '-')}">
-        <h3><i class="fa-solid fa-trophy" aria-hidden="true"></i> ${leaderboard.statName}</h3>
-        <div class="leaderboard-entries">
+      <div class="leaderboard-card ${highlightClass}" id="${id}">
+      <h3><i class="fa-solid fa-trophy" aria-hidden="true"></i> <a href="#${id}">${leaderboard.statName}</a></h3>
+      <div class="leaderboard-entries">
     `;
     
     leaderboard.entries.forEach((entry, index) => {

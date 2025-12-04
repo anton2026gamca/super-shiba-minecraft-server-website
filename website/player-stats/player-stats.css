@@ -245,6 +245,12 @@ a.player:hover {
   transition: all 0.3s ease;
 }
 
+.leaderboard-card.highlighted {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
 .leaderboard-card:hover {
   border-color: var(--accent-primary);
   box-shadow: var(--shadow-sm);
