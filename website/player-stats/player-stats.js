@@ -2,6 +2,7 @@ const API_BASE = '/api';
 
 const playerList = document.getElementById('player-list');
 let players = [];
+let allPlayerStats = {}; // Store all player stats for leaderboards
 
 const url = new URL(window.location.href);
 
@@ -32,6 +33,36 @@ async function createPlayerList() {
     .catch(error => {
       throw new Error('Error fetching player list: ' + error);
     });
+  
+  await fetchAllPlayerStats();
+}
+
+async function fetchAllPlayerStats() {
+  const statsPromises = players.map(player => 
+    fetch(`${API_BASE}/player-stats/${player.uuid}`)
+      .then(response => {
+        if (!response.ok) {
+          return null;
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data) {
+          allPlayerStats[player.uuid] = {
+            name: player.name,
+            stats: data.stats
+          };
+        }
+        return data;
+      })
+      .catch(error => {
+        console.error(`Error fetching stats for ${player.name}:`, error);
+        return null;
+      })
+  );
+  
+  await Promise.all(statsPromises);
+  renderLeaderboards();
 }
 
 function parseStatKey(stat) {
@@ -364,6 +395,102 @@ async function displayPlayer(player) {
 }
 
 window.toggleCategory = toggleCategory;
+
+function getStatValue(playerStats, statKey) {
+  if (!playerStats || !playerStats.stats) return 0;
+  
+  for (const category in playerStats.stats) {
+    if (playerStats.stats[category] && playerStats.stats[category][statKey]) {
+      return playerStats.stats[category][statKey];
+    }
+  }
+  return 0;
+}
+
+function createLeaderboard(statKey, statName, formatFunction = formatNumber, limit = 5) {
+  const leaderboard = [];
+  
+  for (const uuid in allPlayerStats) {
+    const playerStats = allPlayerStats[uuid];
+    const value = getStatValue(playerStats, statKey);
+    
+    if (value > 0) {
+      leaderboard.push({
+        uuid,
+        name: playerStats.name,
+        value,
+        formattedValue: formatFunction(value)
+      });
+    }
+  }
+  
+  leaderboard.sort((a, b) => b.value - a.value);
+  
+  return {
+    statKey,
+    statName,
+    entries: leaderboard.slice(0, limit)
+  };
+}
+
+function renderLeaderboards() {
+  const leaderboardsDiv = document.getElementById('leaderboards');
+  if (!leaderboardsDiv) return;
+  
+  const leaderboards = [
+    createLeaderboard('minecraft:deaths', 'Most Deaths'),
+    createLeaderboard('minecraft:play_time', 'Most Play Time', formatTime),
+    createLeaderboard('minecraft:mob_kills', 'Most Mob Kills'),
+    createLeaderboard('minecraft:player_kills', 'Most Player Kills'),
+    createLeaderboard('minecraft:play_one_minute', 'Most Time Played', formatTime),
+    createLeaderboard('minecraft:walk_one_cm', 'Most Distance Walked', formatDistance),
+    createLeaderboard('lootr:looted_stat', 'Most Looted Chests'),
+    createLeaderboard('minecraft:open_chest', 'Most Chests Opened'),
+    createLeaderboard('minecraft:jump', 'Most Jumps'),
+    createLeaderboard('minecraft:damage_dealt', 'Most Damage Dealt', (v) => formatNumber(v / 10) + ' ❤'),
+    createLeaderboard('minecraft:fish_caught', 'Most Fish Caught'),
+  ];
+  
+  let html = '';
+  
+  leaderboards.forEach(leaderboard => {
+    if (leaderboard.entries.length === 0) return;
+    
+    html += /*html*/`
+      <div class="leaderboard-card" id="leaderboard-${leaderboard.statName.toLowerCase().replace(/ /g, '-')}">
+        <h3><i class="fa-solid fa-trophy" aria-hidden="true"></i> ${leaderboard.statName}</h3>
+        <div class="leaderboard-entries">
+    `;
+    
+    leaderboard.entries.forEach((entry, index) => {
+      const rank = index + 1;
+      const medalClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
+      const medal = rank <= 3 ? `<span class="medal ${medalClass}">#${rank}</span>` : `<span class="rank">#${rank}</span>`;
+      
+      html += /*html*/`
+        <a href="?player=${entry.name}" class="leaderboard-entry">
+          <div class="leaderboard-player">
+            ${medal}
+            <img src="https://api.mineatar.io/face/${entry.uuid}?scale=8" class="leaderboard-avatar" alt="" />
+            <span class="leaderboard-name">${entry.name}</span>
+          </div>
+          <span class="leaderboard-value">${entry.formattedValue}</span>
+        </a>
+      `;
+    });
+    
+    html += /*html*/`
+        </div>
+      </div>
+    `;
+  });
+  
+  if (html === '') {
+    html = '<p class="no-stats">No leaderboard data available.</p>';
+  }
+  
+  leaderboardsDiv.innerHTML = html;
+}
 
 async function displayPlayerFromURL() {
   const playerName = url.searchParams.get('player');

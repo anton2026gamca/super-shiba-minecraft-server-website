@@ -125,6 +125,7 @@ a.player:hover {
 .stat-item:hover {
   background: var(--bg-primary);
   border-color: var(--accent-primary);
+  transform: translateX(4px);
 }
 
 .stat-item.hidden {
@@ -211,4 +212,124 @@ a.player:hover {
 .show-more-btn.expanded {
   background: var(--accent-primary);
   color: var(--bg-primary);
+}
+
+.leaderboards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+.leaderboard-card {
+  background: var(--bg-tertiary);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.leaderboard-card:hover {
+  border-color: var(--accent-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.leaderboard-card h3 {
+  color: var(--accent-primary);
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  border-bottom: 2px solid var(--accent-primary);
+  padding-bottom: var(--spacing-xs);
+}
+
+.leaderboard-card h3 i {
+  color: #FFD700;
+}
+
+.leaderboard-entries {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.leaderboard-entry {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px var(--spacing-xs);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.leaderboard-entry:hover {
+  background: var(--bg-primary);
+  border-color: var(--accent-primary);
+  transform: translateX(4px);
+  text-decoration: none;
+}
+
+.leaderboard-player {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.leaderboard-avatar {
+  border-radius: 10%;
+  height: 24px;
+  width: 24px;
+}
+
+.leaderboard-name {
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+
+.leaderboard-value {
+  color: var(--accent-secondary);
+  font-weight: bold;
+  font-size: 0.95rem;
+  margin-left: var(--spacing-sm);
+}
+
+.medal {
+  font-size: 0.85rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  min-width: 28px;
+  text-align: center;
+}
+
+.medal.gold {
+  background: linear-gradient(135deg, #FFD700, #FFA500);
+  color: #000;
+  box-shadow: 0 2px 4px rgba(255, 215, 0, 0.4);
+}
+
+.medal.silver {
+  background: linear-gradient(135deg, #C0C0C0, #A8A8A8);
+  color: #000;
+  box-shadow: 0 2px 4px rgba(192, 192, 192, 0.4);
+}
+
+.medal.bronze {
+  background: linear-gradient(135deg, #CD7F32, #B8732E);
+  color: #000;
+  box-shadow: 0 2px 4px rgba(205, 127, 50, 0.4);
+}
+
+.rank {
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: var(--text-muted);
+  min-width: 28px;
+  text-align: center;
 }
