@@ -397,6 +397,36 @@ async function displayPlayer(player) {
 
 window.toggleCategory = toggleCategory;
 
+function toggleLeaderboard(leaderboardId) {
+  const allEntries = document.querySelectorAll(`.leaderboard-entry[data-leaderboard="${leaderboardId}"]`);
+  const button = document.querySelector(`.show-more-btn[data-leaderboard="${leaderboardId}"]`);
+  
+  if (!button) return;
+  
+  const hiddenCount = parseInt(button.dataset.hiddenCount, 10);
+  const isExpanded = button.classList.contains('expanded');
+  
+  allEntries.forEach((entry, index) => {
+    if (index >= 5) {
+      if (isExpanded) {
+        entry.classList.add('hidden');
+      } else {
+        entry.classList.remove('hidden');
+      }
+    }
+  });
+  
+  if (isExpanded) {
+    button.textContent = `Show ${hiddenCount} more`;
+    button.classList.remove('expanded');
+  } else {
+    button.textContent = 'Show less';
+    button.classList.add('expanded');
+  }
+}
+
+window.toggleLeaderboard = toggleLeaderboard;
+
 function getStatValue(playerStats, statKey) {
   if (!playerStats || !playerStats.stats) return 0;
   
@@ -408,7 +438,7 @@ function getStatValue(playerStats, statKey) {
   return 0;
 }
 
-function createLeaderboard(statKey, statName, formatFunction = formatNumber, limit = 5) {
+function createLeaderboard(statKey, statName, formatFunction = formatNumber) {
   const leaderboard = [];
   
   for (const uuid in allPlayerStats) {
@@ -430,7 +460,7 @@ function createLeaderboard(statKey, statName, formatFunction = formatNumber, lim
   return {
     statKey,
     statName,
-    entries: leaderboard.slice(0, limit)
+    entries: leaderboard
   };
 }
 
@@ -466,6 +496,10 @@ function renderLeaderboards() {
         if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 0);
     }
+    
+    const totalCount = leaderboard.entries.length;
+    const hiddenCount = Math.max(0, totalCount - 5);
+    
     html += /*html*/`
       <div class="leaderboard-card ${highlightClass}" id="${id}">
       <h3><i class="fa-solid fa-trophy" aria-hidden="true"></i> <a href="#${id}">${leaderboard.statName}</a></h3>
@@ -476,9 +510,10 @@ function renderLeaderboards() {
       const rank = index + 1;
       const medalClass = rank === 1 ? 'gold' : rank === 2 ? 'silver' : rank === 3 ? 'bronze' : '';
       const medal = rank <= 3 ? `<span class="medal ${medalClass}">#${rank}</span>` : `<span class="rank">#${rank}</span>`;
+      const isHidden = index >= 5 ? 'hidden' : '';
       
       html += /*html*/`
-        <a href="?player=${entry.name}" class="leaderboard-entry">
+        <a href="?player=${entry.name}" class="leaderboard-entry ${isHidden}" data-leaderboard="${id}">
           <div class="leaderboard-player">
             ${medal}
             <img src="https://api.mineatar.io/face/${entry.uuid}?scale=8" class="leaderboard-avatar" alt="" />
@@ -491,6 +526,17 @@ function renderLeaderboards() {
     
     html += /*html*/`
         </div>
+    `;
+    
+    if (totalCount > 5) {
+      html += /*html*/`
+        <button class="show-more-btn leaderboard-show-more" data-leaderboard="${id}" data-hidden-count="${hiddenCount}" onclick="toggleLeaderboard('${id}')">
+          Show ${hiddenCount} more
+        </button>
+      `;
+    }
+    
+    html += /*html*/`
       </div>
     `;
   });

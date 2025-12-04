@@ -230,6 +230,10 @@ a.player:hover {
   color: var(--bg-primary);
 }
 
+.leaderboard-show-more {
+  margin-top: var(--spacing-sm);
+}
+
 .leaderboards-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -287,6 +291,10 @@ a.player:hover {
   text-decoration: none;
   border: 2px solid transparent;
   transition: all 0.3s ease;
+}
+
+.leaderboard-entry.hidden {
+  display: none;
 }
 
 .leaderboard-entry:hover {
