@@ -340,6 +340,7 @@ async function displayPlayer(player) {
     <div class="player-header">
       <div id="player-avatar-placeholder" class="player-avatar-placeholder">${player.name[0].toUpperCase()}</div>
       <h2 id="player-name">${player.name}</h2>
+      <a href="?" class="back-button"><i class="fa-solid fa-close" aria-hidden="true"></i></a>
     </div>
     <p class="player-uuid">UUID: ${player.uuid}</p>
     <div id="stats-content" class="stats-content">

@@ -64,6 +64,22 @@ a.player:hover {
   font-size: 1.5rem;
   color: var(--text-primary);
   margin: 0;
+  flex: 1;
+}
+
+.player .player-header .back-button {
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  text-decoration: none;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  transition: all 0.3s ease;
+}
+
+.player .player-header .back-button:hover {
+  background: var(--bg-secondary);
+  color: var(--accent-primary);
+  transform: translateY(-2px);
 }
 
 .player .player-uuid {
