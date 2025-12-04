@@ -157,6 +157,10 @@ function formatDistance(cm) {
   }
 }
 
+function getItemIcon(statKey, categoryId) {
+  return null;
+}
+
 function renderStatsCategory(title, stats, categoryId) {
   if (!stats || Object.keys(stats).length === 0) return '';
   
@@ -186,10 +190,31 @@ function renderStatsCategory(title, stats, categoryId) {
     
     const isHidden = index >= 10 ? 'hidden' : '';
     const modBadge = namespace !== 'minecraft' ? `<span class="mod-badge">${namespace.replace('_', ' ')}</span>` : '';
+    const iconUrl = getItemIcon(key, categoryId);
+    
+    const statName = formatStatName(key);
+    const firstLetter = statName.charAt(0).toUpperCase();
+    const iconId = `icon-${categoryId}-${index}`;
+    
+    if (iconUrl) {
+      setTimeout(() => {
+        const placeholder = document.getElementById(iconId);
+        if (placeholder) {
+          const img = document.createElement('img');
+          img.src = iconUrl;
+          img.alt = '';
+          img.className = `stat-icon`;
+          img.onload = () => {
+            placeholder.replaceWith(img);
+          };
+        }
+      }, 0);
+    }
     
     return /*html*/`
       <div class="stat-item ${isHidden}" data-category="${categoryId}">
-        <span class="stat-name">
+        <span class="stat-name" title="${key}">
+          <span id="${iconId}" class="stat-icon-placeholder">${firstLetter}</span>
           ${formatStatName(key)}
           ${modBadge}
         </span>
