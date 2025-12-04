@@ -1,8 +1,15 @@
 import os
 import json
+from dotenv import load_dotenv
 
-STATS_DIR = "/mcserver/world/stats/"
-USERCACHE_FILE = "/mcserver/usercache.json"
+
+load_dotenv()
+
+MINECRAFT_SERVER_DIR = os.getenv('MINECRAFT_SERVER_DIR', '/mcserver')
+
+STATS_DIR = os.path.join(MINECRAFT_SERVER_DIR, 'world', 'stats')
+USERCACHE_FILE = os.path.join(MINECRAFT_SERVER_DIR, 'usercache.json')
+
 
 def get_uuid_to_name_map():
     try:

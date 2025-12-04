@@ -1,18 +1,23 @@
+import os
 import psutil
 import docker
 from collections import deque
 from datetime import datetime
 import threading
 import time
+from dotenv import load_dotenv
 
 
-HISTORY_MAX_LENGTH = 60
-STATS_COLLECTION_INTERVAL = 60
+load_dotenv()
+
+STATS_HISTORY_MAX_LENGTH = int(os.getenv('STATS_HISTORY_MAX_LENGTH', '60'))
+STATS_COLLECTION_INTERVAL = int(os.getenv('STATS_COLLECTION_INTERVAL', '60'))
+THERMAL_ZONE_PATH = os.getenv('THERMAL_ZONE_PATH', '/sys/class/thermal/thermal_zone0/temp')
+
 MB = 1024 * 1024
 GB = 1024 * 1024 * 1024
-THERMAL_ZONE_PATH = '/sys/class/thermal/thermal_zone0/temp'
 
-history = deque(maxlen=HISTORY_MAX_LENGTH)
+history = deque(maxlen=STATS_HISTORY_MAX_LENGTH)
 history_lock = threading.Lock()
 docker_client = docker.from_env()
 
@@ -141,7 +146,7 @@ def get_history():
         return {
             "data": list(history),
             "interval_seconds": STATS_COLLECTION_INTERVAL,
-            "max_points": HISTORY_MAX_LENGTH
+            "max_points": STATS_HISTORY_MAX_LENGTH
         }
 
 def get_last_history_entry():
