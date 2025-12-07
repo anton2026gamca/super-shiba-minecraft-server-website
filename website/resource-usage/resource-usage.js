@@ -52,48 +52,48 @@ function formatTimestamp(timestamp) {
 function updateSystemStats(data) {
   const system = data.system;
   const statsHtml = /*html*/`
-    <a href="#cpu-usage" class="stat-card ${getStatClass(system.cpu)}">
+    <a href="#cpu-usage" class="stat-card ${getStatClass(system.cpu || 0)}">
       <div class="stat-icon"><i class="fa-solid fa-microchip"></i></div>
-      <div class="stat-value">${system.cpu.toFixed(1)}%</div>
+      <div class="stat-value">${system.cpu ? system.cpu.percent.toFixed(1) + '%' : 'N/A'}</div>
       <div class="stat-label">CPU Usage</div>
     </a>
     <a href="#ram-usage" class="stat-card ${getStatClass(system.ram)}">
       <div class="stat-icon"><i class="fa-solid fa-memory"></i></div>
-      <div class="stat-value">${system.ram.toFixed(1)}%</div>
+      <div class="stat-value">${system.memory ? system.memory.percent.toFixed(1) + '%' : 'N/A'}</div>
       <div class="stat-label">RAM Usage</div>
       <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
-        ${system.ram_used_mb.toFixed(0)} / ${system.ram_total_mb.toFixed(0)} MB
+        ${system.memory && system.memory.used ? system.memory.used.toFixed(0) : '0'} / ${system.memory && system.memory.total ? system.memory.total.toFixed(0) : '0'} MB
       </div>
     </a>
-    <a href="#swap-usage" class="stat-card ${getStatClass(system.swap)}">
+    <a href="#swap-usage" class="stat-card ${getStatClass(system.swap && system.swap.percent ? system.swap.percent : 0)}">
       <div class="stat-icon"><i class="fa-solid fa-memory"></i></div>
-      <div class="stat-value">${system.swap.toFixed(1)}%</div>
+      <div class="stat-value">${system.swap && system.swap.percent ? system.swap.percent.toFixed(1) + '%' : '0%'}</div>
       <div class="stat-label">Swap Usage</div>
       <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
-        ${system.swap_used_mb.toFixed(0)} / ${system.swap_total_mb.toFixed(0)} MB
+        ${system.swap && system.swap.used ? system.swap.used.toFixed(0) : '0'} / ${system.swap && system.swap.total ? system.swap.total.toFixed(0) : '0'} MB
       </div>
     </a>
-    <a href="#disk-usage" class="stat-card ${getStatClass(system.disk)}">
+    <a href="#disk-usage" class="stat-card ${getStatClass(system.disk && system.disk.percent ? system.disk.percent : 0)}">
       <div class="stat-icon"><i class="fa-solid fa-hard-drive"></i></div>
-      <div class="stat-value">${system.disk.toFixed(1)}%</div>
+      <div class="stat-value">${system.disk && system.disk.percent ? system.disk.percent.toFixed(1) + '%' : '0%'}</div>
       <div class="stat-label">Disk Usage</div>
       <div class="text-muted" style="font-size: 0.8rem; margin-top: 5px;">
-        ${system.disk_used_gb.toFixed(1)} / ${system.disk_total_gb.toFixed(1)} GB
+        ${system.disk && system.disk.used ? system.disk.used.toFixed(1) : '0'} / ${system.disk && system.disk.total ? system.disk.total.toFixed(1) : '0'} GB
       </div>
     </a>
-    <a href="#cpu-temp" class="stat-card ${system.temperature ? getStatClass(system.temperature, 60, 75) : ''}">
+    <a href="#cpu-temp" class="stat-card ${system.temp ? getStatClass(system.temp, 60, 75) : ''}">
       <div class="stat-icon"><i class="fa-solid fa-temperature-half"></i></div>
-      <div class="stat-value">${system.temperature ? system.temperature.toFixed(1) + '°C' : 'N/A'}</div>
+      <div class="stat-value">${system.temp ? system.temp.toFixed(1) + '°C' : 'N/A'}</div>
       <div class="stat-label">CPU Temp</div>
     </a>
     <a href="#network-traffic" class="stat-card">
       <div class="stat-icon"><i class="fa-solid fa-arrow-down"></i></div>
-      <div class="stat-value">${system.network_rx_mb.toFixed(1)}</div>
+      <div class="stat-value">${system.network && system.network.bytes_recv ? system.network.bytes_recv.toFixed(1) : '0.0'}</div>
       <div class="stat-label">Network RX (MB)</div>
     </a>
     <a href="#network-traffic" class="stat-card">
       <div class="stat-icon"><i class="fa-solid fa-arrow-up"></i></div>
-      <div class="stat-value">${system.network_tx_mb.toFixed(1)}</div>
+      <div class="stat-value">${system.network && system.network.bytes_sent ? system.network.bytes_sent.toFixed(1) : '0.0'}</div>
       <div class="stat-label">Network TX (MB)</div>
     </a>
   `;
@@ -106,7 +106,7 @@ function updateContainers(containers, history) {
     return;
   }
 
-  Object.values(charts?.containers | {}).forEach(chart => chart.destroy());
+  Object.values(charts.containers || {}).forEach(chart => chart.destroy());
   charts.containers = {};
 
   const containersHtml = containers.map(c => /*html*/`
@@ -125,10 +125,10 @@ function updateContainers(containers, history) {
           <i class="fa-solid fa-memory"></i> Memory: <strong>${c.memory_usage_mb.toFixed(0)} MB (${c.memory_percent.toFixed(1)}%)</strong>
         </div>
         <div class="container-stat">
-          <i class="fa-solid fa-arrow-down"></i> RX: <strong>${c.network_rx_mb.toFixed(2)} MB</strong>
+          <i class="fa-solid fa-arrow-down"></i> RX: <strong>${c.network && c.network.bytes_recv ? c.network.bytes_recv.toFixed(2) : '0.00'} MB</strong>
         </div>
         <div class="container-stat">
-          <i class="fa-solid fa-arrow-up"></i> TX: <strong>${c.network_tx_mb.toFixed(2)} MB</strong>
+          <i class="fa-solid fa-arrow-up"></i> TX: <strong>${c.network && c.network.bytes_sent ? c.network.bytes_sent.toFixed(2) : '0.00'} MB</strong>
         </div>
       </div>
       <div class="chart-container">
@@ -155,7 +155,7 @@ function updateContainers(containers, history) {
         datasets: [
           {
             label: 'CPU Usage (%)',
-            data: history.map(d => d.containers[i].cpu_percent),
+            data: history.map(d => (d.containers && d.containers[i] ? d.containers[i].cpu_percent : null)),
             borderColor: '#f39c12',
             backgroundColor: 'rgba(243, 156, 18, 0.1)',
             tension: 0.4,
@@ -163,7 +163,7 @@ function updateContainers(containers, history) {
           },
           {
             label: 'RAM Usage (%)',
-            data: history.map(d => d.containers[i].memory_percent),
+            data: history.map(d => (d.containers && d.containers[i] ? d.containers[i].memory_percent : null)),
             borderColor: '#2ecc71',
             backgroundColor: 'rgba(46, 204, 113, 0.1)',
             tension: 0.4,
@@ -200,7 +200,7 @@ function createCharts(history) {
       labels: labels,
       datasets: [{
         label: 'CPU Usage (%)',
-        data: history.map(d => d.system.cpu),
+        data: history.map(d => d.system.cpu ? d.system.cpu.percent : null),
         borderColor: '#f39c12',
         backgroundColor: 'rgba(243, 156, 18, 0.1)',
         tension: 0.4,
@@ -226,7 +226,7 @@ function createCharts(history) {
       labels: labels,
       datasets: [{
         label: 'RAM Usage (%)',
-        data: history.map(d => d.system.ram),
+        data: history.map(d => (d.system && d.system.memory ? d.system.memory.percent : null)),
         borderColor: '#2ecc71',
         backgroundColor: 'rgba(46, 204, 113, 0.1)',
         tension: 0.4,
@@ -252,7 +252,7 @@ function createCharts(history) {
       labels: labels,
       datasets: [{
         label: 'Swap Usage (%)',
-        data: history.map(d => d.system.swap),
+        data: history.map(d => (d.system && d.system.swap ? d.system.swap.percent : null)),
         borderColor: '#16a085',
         backgroundColor: 'rgba(22,160,133,0.1)',
         tension: 0.4,
@@ -278,7 +278,7 @@ function createCharts(history) {
       labels: labels,
       datasets: [{
         label: 'Disk Usage (%)',
-        data: history.map(d => d.system.disk),
+        data: history.map(d => (d.system && d.system.disk ? d.system.disk.percent : null)),
         borderColor: '#3498db',
         backgroundColor: 'rgba(52, 152, 219, 0.1)',
         tension: 0.4,
@@ -304,7 +304,7 @@ function createCharts(history) {
       labels: labels,
       datasets: [{
         label: 'CPU Temperature (°C)',
-        data: history.map(d => d.system.temperature || null),
+        data: history.map(d => (d.system ? (d.system.temp || null) : null)),
         borderColor: '#e74c3c',
         backgroundColor: 'rgba(231, 76, 60, 0.1)',
         tension: 0.4,
@@ -322,7 +322,7 @@ function createCharts(history) {
       datasets: [
         {
           label: 'RX (MB)',
-          data: history.map(d => d.system.network_rx_mb),
+          data: history.map(d => (d.system && d.system.network ? d.system.network.bytes_recv : null)),
           borderColor: 'rgba(120, 79, 255, 1)',
           backgroundColor: 'rgba(120, 79, 255, 0.1)',
           tension: 0.4,
@@ -330,7 +330,7 @@ function createCharts(history) {
         },
         {
           label: 'TX (MB)',
-          data: history.map(d => d.system.network_tx_mb),
+          data: history.map(d => (d.system && d.system.network ? d.system.network.bytes_sent : null)),
           borderColor: '#9b59b6',
           backgroundColor: 'rgba(155, 89, 182, 0.1)',
           tension: 0.4,
